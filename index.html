@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript"> // --> Para indicar que el tipo de texto a leer es en este caso Javascript
+        //  Comentario de una línea
+        /* 
+            Comentario multilínea 
+        */
+
+        //  Las variables son como en Python, en este caso no hay String y Char, es todo String
+        var texto = "1";
+        var num1 = 9
+        var num2 = 3.5
+        var bool = true
+
+        typeof(num2) // Función para saber el tipo de un dato
+
+        //  Se puede poner o no ";" al final de una línea de comando
+
+        //  Para imprimir por pantalla
+        console.log("Texto normal:" + num1)
+        console.error("Texto en rojo para errores")
+
+        //  Para los cambios de variables
+        parseInt("7")
+        parseFloat("7.9")
+
+        //  Con booleanos
+        //  0 -> False
+        //  1 -> True
+        //  Variable vacia es False (""), si tiene valor es true ("h")
+        //  Boolean() --> Boolean(2) = True
+
+        /* Operadores Comparación
+
+            == Compara dos valores, sin tener en cuenta el tipo de dato
+            != Compara si son distintos, sin tener en cuenta el tipo de dato
+            === Compara dos valores, teniendo en cuenta el tipo de dato
+            !== Compara si son distintos, teniendo en cuenta el tipo de dato
+            >= Compara si es mayor o igual
+            <= Compara si es menor o igual
+            > Compara si es mayor
+            < Compara si es menor
+        */
+
+        /* Operadores Aritméticos
+
+            +
+            -
+            *
+            /
+            %
+            ++
+            --
+        */
+
+        /* Operadores de Asignación
+
+            =
+            +=
+            -=
+            *=
+            /=
+            %=
+        */
+
+        /* Operadores Lógicos
+
+            &&
+            ||
+            !
+        */
+
+        /*  ESTRUCTURAS DE CONTROL
+
+            --IF--
+
+            if(condicion){
+                Código si se cumple
+            }else{
+                Código si no se cumple
+            }
+            
+            =====================================================================
+
+            -- IF de línea-- (Para if más sencillos)
+
+            if(condición) Código si se cumple; else Código si no se cumple
+        
+            =====================================================================
+            
+            --IF--
+
+            condicion ? Código si se cumple : Código si no se cumple
+
+
+            =====================================================================
+
+            --FOR-- (recorriendo por índice)
+
+            for(expresión inicial; condición; incremento){
+
+            }
+
+            =====================================================================
+
+            --FOR EACH-- (recorriendo por elemento)
+
+            listaElementos.forEach(function(item){
+                console.log(item)
+            })
+
+            listaElementos.forEach(item=> console.log(item))
+
+            =====================================================================
+
+            --WHILE--
+
+            while(condición){
+                Codigo            
+            }
+
+            =====================================================================
+
+            --DO WHILE--
+
+            do{
+                Codigo
+            }while(condición)
+
+        */
+
+        /*  OBJETOS ANÓNIMOS (diccionarios en Python)
+
+            var obj1 = {
+                "clave1": valor1,
+                "clave2": valor2,
+                ...
+            }
+            
+            Podemos acceder como objetos o como diccionarios
+            obj1.clave1 
+            obj1["clave1"]
+
+            Para recorrerlos:
+
+            for(var clave in obj){
+                console.log("Clave: " + clave + " | valor: " + obj[clave])
+            }
+
+            Object.keys(obj) --> Devuelve una lista de las claves
+            Object.keys(obj).forEach(clave=> console.log(obj[clave]))
+        
+        */
+
+        /*  ARRAYS
+
+            [1,2,3,"A","B",true]
+
+            .length --> Saber el número de elementos
+            .push(item) --> Añadir un elemento al final del array
+            .pop(item) --> Sacar el último elemento de un array
+            .indexOf(item) --> Primer indice de la coincidencia
+            .includes(item) --> Saber si un elemento está incluido en el array
+            .toString() --> Separar los elementos del array por comas en un String
+            .join(separador) --> Separar los elementosd del array por un separador (Por ejmplo: 1+2+3)
+
+            .every() --> Función similar al Map, comprueba que cada elemento cumple una función --> EL MAP Y REDUCE EXISTEN
+
+            var num = [2,4,6,8]
+            var sonPares = num.every(item=> iterm % 2 == 0)
+
+            .some () --> Cumprueba si alguno de los elementos cumple una función
+
+            var num = [1,2,4,6,8]
+            var algunImares = num.some(item=> iterm % 2 != 0)
+
+            .find() --> Para encontrar alguna coincidencia
+
+            var personas = {
+                {nombre:"Ana" , edad:25},
+                {nombre: "Carlos" , edad: 27},
+                {nombre: "Sofia" , edad:18}
+            }
+            personas.find(persona=> persona.edad >36)
+
+            Si no se encuentra ninguna persona que cumple la condicíón se usará:
+            -Null(hay una variable con valor null) 
+            -Undefined(variable definida a la que no se le da valor)
+
+        */
+
+        /*  TRY-CATCH
+
+            try{
+                Código que puede dar error
+            } catch(Exeception){
+                Código en caso de que se produzca el error
+            } finally {
+                Código que si o si se ejecuta 
+            }
+        
+        */
+
+        /*  FUNCIONES   
+
+            Las funciones callbacks que se pasan como parametros a otras
+
+            function elevarAlCuadrado (item){
+                return item**2
+            }
+
+            function ... ( ... , elevarAlCuadrado)
+        
+            =====================================================================
+
+            Las funciones autejecutables se ejectutan cuando se lee esa línea
+
+            (function X(){
+                console.log("Se ejecuta forma inmediata")
+            })()
+
+            =====================================================================
+
+            var idTimeout = setTimeout(elevarAlCuadrado(3),3000) --> cuando pasa el tiempo ejecuta la funcion una única vez
+            var idTimeInterval = setInterval(elevarAlCuadrado(3),3000) --> cada vez que pasa el tiempo se ejecuta la función
+
+            clearTimeout(idTimeout) --> Prevenir la ejecución del timeout
+            clearInterval(idInterval) --> Parar la ejecución del interval
+
+            =====================================================================
+
+            alert("mensaje") --> interrumpe la ejecución del programa mostrando un mensaje hasta que se de al botón de aceptar
+
+            =====================================================================
+
+            confirm("mensaje") --> interrumpe la ejecución del programa mostrando un mensaje hasta que se de al botón de aceptar
+
+            =====================================================================
+
+            prompt("mensaje") --> interrumpe la ejecución del programa hasta que el usuario ingresa un valor (siempre texto)
+        */
+
+        /* 
+        
+
+        */
+
+        
+
+    </script>
+</body>
+</html>
