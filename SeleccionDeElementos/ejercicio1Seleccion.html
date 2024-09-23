@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <p class="prueba"></p>
+    <p class="prueba"></p>
+    <p class="prueba"></p>
+    <p class="prueba"></p>
+
+    <input type="text" name="" id="input">
+    <input type="radio" name="radio" >
+    <input type="radio" name="radio" >
+    <input type="radio" name="radio" >
+
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmLLdy7Lbn6GrVNoDquaYhaPzuCSiJGnv_w&s">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmLLdy7Lbn6GrVNoDquaYhaPzuCSiJGnv_w&s">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmLLdy7Lbn6GrVNoDquaYhaPzuCSiJGnv_w&s">
+
+    <script type="text/javascript">
+
+        /*
+            --- EJERCICIOS HECHOS EN CONSOLA ---
+
+
+            document.querySelectorAll("P")[0].style.border="5px solid red"
+                - Podemos recuperar cualquier elemento y cambiar sus propiedades CSS
+                - Podemos crear bucles que recorran las estructuras para cambiar varios elementos etc
+
+            document.querySelector("#input").value
+                - Podemos recuperar el valor de inputs determinados
+                - También podemos modificarlo o resetando haciendo value=""
+                - Se usa siempre que queramos recoger datos
+
+            document.querySelectorAll("[name=radio]")
+                - Cuando queremos recoger algo por un nombre en concreto usamos []
+
+            document.querySelector("[name=radio]").checked
+                - Podemos saber si un radio está marcado o no, retornará true o false
+                - Se puede también asignar el propio valor haciendo =valor
+
+            document.querySelector("img").src
+                - Para obtener el src de una imagen, este se puede variar con value = ...
+        
+        */
+
+        // Función para recorrer los radios y ver cuál está marcado
+        // Una vez encontrado mostramos en el input de texto cuál es el marcado
+        function verMarcado (){
+            // Es útil guardar los elementos con los que vamos a trabajar en variables
+            var inputs = document.querySelectorAll("[name=radio]");
+            var inputText = document.querySelector("#input");
+
+            for(var i = 0; i< inputs.length; i++){
+                if(inputs[i].checked){
+                    inputText.value="El input marcado es el " + (i+1);
+                }
+            }
+        }
+
+        //Hacer que la imagen cambie cada 5 segundos y queremos que al ejecutarse 5 veces se detenga
+        var inicio = setInterval(cambiarImagen,1000);
+        var parada = setTimeout(pararCambio,1000*5);
+        
+        function cambiarImagen (){
+            var imagen = document.querySelector("img");
+
+            if (imagen.src == "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmLLdy7Lbn6GrVNoDquaYhaPzuCSiJGnv_w&s"){
+                imagen.src="https://www.biospace.es/wp-content/uploads/Myosotis.jpg";
+            }else{
+                imagen.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmLLdy7Lbn6GrVNoDquaYhaPzuCSiJGnv_w&s";
+            }
+        }
+
+        function pararCambio (){
+            clearInterval(inicio);
+        }
+        
+        
+             
+    
+
+        
+
+    </script>
+    
+</body>
+</html>
