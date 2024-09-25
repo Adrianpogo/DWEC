@@ -7,6 +7,7 @@
 </head>
 <body>
 
+    <input type="text" name="" id="inp" class="clase1 clase2 clase 3">
     <p class="prueba"></p>
     <p class="prueba"></p>
     <p class="prueba"></p>
@@ -76,9 +77,31 @@
             }
         }
 
+        // Función auxiliar para parar el intervalo (es necesaria)
         function pararCambio (){
             clearInterval(inicio);
         }
+
+
+        /*
+
+            Para las clases:
+
+                - var inpt = document.querySelector(".clase1") -- <input type="text" name="" id="inp" class="clase1 clase2 clase 3">
+
+                - inpt.classList[0] -- 'clase1'
+
+                - inpt.classList.contains("clase0") -- false
+            
+                - inpt.classList.remove("clase1")
+
+                - inpt.classList.add("clase4")
+
+
+
+        
+        
+        */
         
         
              

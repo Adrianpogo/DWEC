@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            text-align: center;
+            background-color: #EFE5EE;
+        }
+
+        input{
+            background-color: #C484BE;
+            text-align: right;
+            padding-right: 25px ;
+            margin: 10px;
+            height: 50px;
+            width: 400px;
+            font-size: 24px;
+        }
+        button{
+            background-color: #460C40;
+            border-radius: 15px;
+            color: #EFE5EE;
+            font-size: 24px;
+            margin: 5px;
+            height: 50px;
+            width: 90px;
+            box-shadow: 0 2px 2px 2px #C484BE;
+        }
+
+        button:hover{
+            background-color: #C484BE;
+        }
+    </style>
+</head>
+<body>
+    <h1>CALCULADORA</h1>
+    <section>
+        <input type="text" autofocus>
+    </section>
+    <section>
+        <section>
+            <button class="operando">1</button>
+            <button class="operando">2</button>
+            <button class="operando">3</button>
+            <button class="operando">+</button>
+        </section>
+        <section>
+            <button class="operando">4</button>
+            <button class="operando">5</button>
+            <button class="operando">6</button>
+            <button class="operando">-</button>
+        </section>
+        <section>
+            <button class="operando">7</button>
+            <button class="operando">8</button>
+            <button class="operando">9</button>
+            <button class="operando">*</button>
+        </section>
+        <section>
+            <button class="resultado">=</button>
+            <button class="operando">%</button>
+            <button class="operando">/</button>
+            <button class="borrar">CE</button>
+        </section>
+        <section>
+            <button class="borrar-1">DEL</button>
+        </section>
+    </section>
+
+    <script type="text/javascript">
+
+        var operando = document.querySelectorAll(".operando")
+        var resultado = document.querySelector(".resultado")
+        var borrado = document.querySelector(".borrar")
+        var borradoSimple = document.querySelector(".borrar-1")
+        //var anterior = document.querySelector(".anterior")
+        var input = document.querySelector("[type=text]")
+
+        var hasCalculado = false
+
+        function añadirNumero (e){
+            if(hasCalculado){
+                borrar()
+                hasCalculado=false
+            }
+            input.value += e.target.innerText
+        }
+
+        function borrar (e){
+            input.value = null
+        }
+
+        function borrarSimple (e){
+            input.value = input.value.slice(0,-1)
+        }
+
+        function calcular (e){
+            input.value = eval(input.value) 
+            hasCalculado = true;
+        }
+
+        for(var i = 0; i<operando.length; i++){
+            operando[i].addEventListener("click",añadirNumero)
+        }
+
+        borrado.addEventListener("click",borrar)
+        borradoSimple.addEventListener("click",borrarSimple)
+        resultado.addEventListener("click",calcular)
+        
+        
+
+
+    </script>
+    
+</body>
+</html>
