@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .div1{
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            margin: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="div1">
+
+    </div>
+    <div class="div1">
+
+    </div>
+
+
+    <input type="text" id="#id1">
+    <input type="text" id="#id2">
+    <select name="" id="">
+        <option value="">1</option>
+        <option value="">2</option>
+        <option value="">3</option>
+    </select>
+
+    <script type="text/javascript">
+
+        //document.querySelector("#id1").remove -- Para eliminar uno de ellos
+        //documento.querySelectorAll("input").forEach(funtion(x){
+        //                                          x.remove()
+        //                                          })
+
+        var input = Array.from(document.querySelectorAll("input"))
+        var select = document.querySelector("select")
+
+        function eventoOnChange (e){
+            console.log(e.target)
+        }
+
+        input.forEach(x=>x.addEventListener("change",eventoOnChange))
+        select.addEventListener("change",eventoOnChange)
+
+        // Al ejecutar el programa, si modificamos algún elemento, se muestra por pantalla
+        // En los inputs de texto no se lanza cuando se escribe, si no una vez salimos del input
+        // Para hacer que se lance cada vez que se escriba una letra usamos OnInput -- "input"
+
+        // El "focus" es el evento que se lanza cuando selecciono un elemento para modificarlo
+        // El "blur" hace el efecto contrario, se lanza cuando perdemos el foco sobre un elemento
+
+
+
+        // Lanzar eventos cuando entramos, permanecemos y salimos de un elmento
+        var inputs = Array.from(document.querySelectorAll("div"))
+        var inicio
+
+        function eventoOnMouseEnter(){
+            console.log("Entro con el ratón al elemento")
+            setTimeout(() => {
+                console.log("Sigues dentro del elemento")
+            }, 0);
+            inicio = setInterval(() => {
+                console.log("Sigues dentro del elemento")
+            }, 1000);
+        }
+        function eventoOnMouseLeave(){
+            console.log("Salgo con el ratón del elemento")
+            clearInterval(inicio)
+        }
+        function eventoOnMouseOver(){
+            console.log("Estoy con el ratón en el elemento")
+            
+        }
+
+    
+
+        inputs.forEach(x=>x.addEventListener("mouseenter",eventoOnMouseEnter))
+        inputs.forEach(x=>x.addEventListener("mouseleave",eventoOnMouseLeave))
+        inputs.forEach(x=>x.addEventListener("mouseover",eventoOnMouseOver))
+        
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            text-align: center;
+        }
+        table{
+            border: 2px solid black;
+            margin: 50px auto;
+            padding: 15px 10px;
+            border-collapse: collapse;
+            font-family: 'Calibri';
+        }
+
+        table thead{
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        table th,td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            width: 150px;
+        }
+
+        input{
+            width: 50%;
+            text-align: center;
+        }
+
+        .calculo{
+            padding: 10px;
+            width: 150px;
+            background-color: #ddd;
+        }
+
+        .calculo:hover{
+            background-color: black;
+            color: #ddd;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <!--
+    
+    Te encuentras trabajando en la sección de análisis de datos de tu empresa.
+    El equipo necesita una herramienta web que permita realizar cálculos dinámicos para analizar distintas variables.
+    Concretamente, se necesita una tabla que se pueda actualizar con datos aleatorios y permita realizar operaciones
+    matemáticas sencillas. Esta herramienta ayudará a los analistas a entender rápidamente relaciones numéricas en un
+    conjunto de datos.
+    
+    Objetivos
+    Inicialización Automática: Al cargar la página, las celdas bajo la columna "Valor Aleatorio"
+    deben llenarse automáticamente con números aleatorios entre 1 y 10.
+    
+    Calculo Dinámico: Cada fila de la tabla tiene un campo de entrada donde los usuarios pueden insertar un número.
+    Al hacerlo, la celda "Resultado" en la misma fila debe actualizar su valor al multiplicar el número
+    ingresado por el "Valor Aleatorio" de esa fila.
+    
+    Sumatoria de Resultados: Debe existir un botón llamado "Calcular Suma".
+    Al presionarlo, la aplicación debe sumar todos los valores en la columna "Resultado"
+    y mostrar una alerta con la suma total.
+    
+    Requisitos Técnicos
+    -Utilizar JavaScript para todas las interacciones y cálculos.
+    -Los números aleatorios deben generarse programáticamente durante la carga de la página
+
+    -->
+
+    <!-------------------------------------------------------------------------------------------------->
+
+    <table>
+        <thead>
+            <tr>
+                <th>Input</th>
+                <th>Valor Aleatorio</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="number"></td>
+                <td class="numAleatorio"></td>
+                <td class="resultado">0</td>
+            </tr>
+            <tr>
+                <td><input type="number"></td>
+                <td class="numAleatorio"></td>
+                <td class="resultado">0</td>
+            </tr>
+            <tr>
+                <td><input type="number"></td>
+                <td class="numAleatorio"></td>
+                <td class="resultado">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="calculo">Calcular Suma</button>
+
+    <!-------------------------------------------------------------------------------------------------->
+
+    <script type="text/javascript">
+        var inputs = Array.from(document.querySelectorAll("input"))
+        var aleatorios = Array.from(document.querySelectorAll(".numAleatorio"))
+        var resultados = Array.from(document.querySelectorAll(".resultado"))
+        var calculo = document.querySelector("button")
+
+        var indice
+        var resultado
+
+        // Rellenamos automáticamente la columna de números aleatorios cada vez que se ejecuta el programa
+        for(var i = 0 ; i < aleatorios.length ; i++){
+            aleatorios[i].value = parseInt((Math.random(1,10)*10)+1)
+            aleatorios[i].innerHTML = aleatorios[i].value
+        }
+
+        function calcularFila (e){
+            indice = inputs.indexOf(e.target)
+            resultados[indice].innerHTML = eval(aleatorios[indice].value + parseInt(inputs[indice].value))
+        }
+
+        function calcularTotal(){
+            for(var i = 0 ; i<resultados.length; i++){
+                resultado +=parseInt( resultados[i].value)
+            }
+            alert("El resultado es: "+resultado)
+        }
+
+        inputs.forEach(x=>x.addEventListener("blur",calcularFila))
+        calculo.addEventListener("click", calcularTotal)
+
+
+       
+
+    </script>
+
+    
+</body>
+</html>
