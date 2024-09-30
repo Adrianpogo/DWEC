@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Conversor de Temperatura</title>
     <style>
         *{
             text-align: center;
@@ -26,7 +26,6 @@
             font-size: 24px;
         }
 
-    
         input{
             padding: 10px;
         }
@@ -40,57 +39,105 @@
             color: #EEECE5;
         }
 
+        .botones button{
+            margin: 0 20px;
+            padding: 10px;
+            width: 20%;
+            font-size: 14px;
+            background-color: black;
+            border-radius: 15px;
+            color: #EEECE5;
+        }
+
+        .botones button:hover{
+            
+            transform: scale(1.2); /* Aumenta el tamaño al 120% */
+            background-color: #42423f;
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- 
-    
-    ================  CONVERSOR DE GRADOS CELSIUS A FARENHEIT  ================
-     
-    Un input con el valor 
-    Un select con opciones para elegir las unidades de entrada
-    Un select con opciones para elegir las unidades de salida
-
-    Un boton para realizar la conversión y uno para limpiar el valor introducido
-    
-    -->
     <section>
 
         <h1>Conversor de Temperatura</h1>
         <div class="valor">
             <label>Valor:</label>
-            <input type="text" placeholder="Introduce el valor a convertir">
+            <!-- Agregué el ID 'valor' al input -->
+            <input type="text" id="valor" placeholder="Introduce el valor a convertir">
         </div>
 
         <div class="opciones">
             <label>Convertir de: </label>
-            <select>
+            <select id="de">
                 <option>Celsius</option>
-                <option>Farenheit</option>
+                <option>Fahrenheit</option> <!-- Corregí la ortografía -->
             </select>
             <label>a: </label>
-            <select>
+            <select id="a">
                 <option>Celsius</option>
-                <option>Farenheit</option>
+                <option>Fahrenheit</option> <!-- Corregí la ortografía -->
             </select>
         </div>
 
         <div class="botones">
-            <button>Convertir</button>
-            <button>Limpiar</button>
+            <!-- Agregué los IDs 'convertir' y 'limpiar' a los botones -->
+            <button id="convertir">Convertir</button>
+            <button id="limpiar">Limpiar</button>
         </div>
+
+        <p id="resultado"></p>
 
     </section>
     
     
     <script type="text/javascript">
-        var input = document.querySelector("[type=text]")
-        var entrada = document.querySelector()
-        var salida = document.querySelector()
-        
+        // Declaración y asignación de variables fuera de las funciones
+        var valorInput = document.querySelector('#valor');
+        var selectDe = document.querySelector('#de');
+        var selectA = document.querySelector('#a');
+        var resultadoTexto = document.querySelector('#resultado');
 
+        // Función para convertir las temperaturas
+        function convertirTemperatura() {
+            var valor = valorInput.value;
 
+            // Verificar si el valor es un número válido
+            if (isNaN(valor) || valor === "") {
+                resultadoTexto.textContent = 'Por favor, introduce un valor numérico válido.';
+                return;
+            }
+
+            // Verificar si se han seleccionado las mismas unidades
+            if (selectDe.value === selectA.value) {
+                resultadoTexto.textContent = 'Se han seleccionado las mismas unidades.';
+                return;
+            }
+
+            // Realizar la conversión
+            var valorConvertido;
+            if (selectDe.value === 'Celsius' && selectA.value === 'Fahrenheit') {
+                valorConvertido = (valor * 9/5) + 32;
+            } else if (selectDe.value === 'Fahrenheit' && selectA.value === 'Celsius') {
+                valorConvertido = (valor - 32) * 5/9;
+            }
+
+            // Mostrar el resultado
+            resultadoTexto.textContent = 'Se ha convertido ' + valor + '° ' + selectDe.value + ' a ' + valorConvertido.toFixed(2) + '° ' + selectA.value + '.';
+        }
+
+        // Función para limpiar todos los campos
+        function limpiarCampos() {
+            valorInput.value = '';
+            resultadoTexto.textContent = '';
+            selectDe.value = 'Celsius';
+            selectA.value = 'Celsius';
+        }
+
+        // Asignar eventos a los botones
+        document.querySelector('#convertir').onclick = convertirTemperatura;
+        document.querySelector('#limpiar').onclick = limpiarCampos;
     </script>
     
 </body>
