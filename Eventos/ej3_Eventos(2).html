@@ -109,34 +109,7 @@
     <!-------------------------------------------------------------------------------------------------->
 
     <script type="text/javascript">
-        var inputs = Array.from(document.querySelectorAll("input"))
-        var aleatorios = Array.from(document.querySelectorAll(".numAleatorio"))
-        var resultados = Array.from(document.querySelectorAll(".resultado"))
-        var calculo = document.querySelector("button")
 
-        var indice
-
-        // Rellenamos automáticamente la columna de números aleatorios cada vez que se ejecuta el programa
-        for(var i = 0 ; i < aleatorios.length ; i++){
-            aleatorios[i].innerHTML = parseInt((Math.random(1,10)*10)+1)
-        }
-
-        function calcularFila (e){
-            indice = inputs.indexOf(e.target)
-            resultados[indice].innerHTML = parseInt(aleatorios[indice].innerHTML) + parseInt(inputs[indice].value)  
-        }
-
-        function calcularTotal(){
-            var resultado = 0
-            for(var i = 0 ; i<resultados.length; i++){
-                resultado += parseInt(resultados[i].innerHTML)
-                
-            }
-            alert("El resultado es: "+ resultado)
-        }
-
-        inputs.forEach(x=>x.addEventListener("blur",calcularFila))
-        calculo.addEventListener("click", calcularTotal)
 
        
 
