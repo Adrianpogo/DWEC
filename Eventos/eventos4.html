@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            border: 1px solid black
+        }
+    </style>
+    
+</head>
+
+<body>
+
+    <div>
+
+    </div>
+    <button>Púlsame</button>
+    <!-- <button onclick="">Pulsame</button>-->
+
+    <script type="text/javascript">
+
+        // EJEMPLO BÁSICO DE CREACIÓN DE ELEMENTOS HTML
+        var div = document.querySelector("div")
+        var boton =document.querySelector("button")
+
+        function decirHola(htmlElement){
+            console.log(htmlElement)
+            console.log("Hola")
+        }
+    
+        function crearElemento (){
+            div.innerHTML += "<input onclick='decirHola(this)' type='text'/>" // EVENTOS SOBRE ELEMENTOS CREADOS (DELEGACIÓN DE EVENTOS) -- Los elementos se recogen en el futuro ya que al pincipio no estan
+        }
+
+        boton.addEventListener("click", crearElemento)
+
+        
+    </script>
+    
+</body>
+</html>

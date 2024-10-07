@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            text-align: center;
+        }
+        table{
+            border: 2px solid black;
+            margin: 50px auto;
+            padding: 15px 10px;
+            border-collapse: collapse;
+            font-family: 'Calibri';
+        }
+
+        table thead{
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        table th,td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            width: 150px;
+        }
+
+        button{
+            width: 200px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!--
+    
+    CREAR UNA TABLA DE DOS COLUMNAS QUE SOLO TENGA LA CABECERA INICIALMENTE
+        - Habrá un boton que permita crear una fila nueva
+        - La primera columna se añade un imagen
+        - La segunda columna se añade un botón
+        - Al pusar el botón de borra la fila entera
+    
+    -->
+    
+    <button>Añadir Fila</button>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imagen</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        var tbody = document.querySelector("tbody")
+        var boton = document.querySelector("button")
+        var contadorFila = 1
+
+        function añadirFila (){
+            tbody.innerHTML += `
+                <tr>
+                    <td>`+ contadorFila+ `</td>
+                    <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi8fLOEddXAsbLbH96hDM6xfI8g4yaDpwB9g&s"></td>
+                    <td><button onclick="eliminarFila(this)">Eliminar</button></td>
+                </tr>`
+
+            contadorFila++
+        }
+
+        function eliminarFila(htmlElement){
+            htmlElement.closest("tr").remove()
+        }
+
+        boton.addEventListener("click", añadirFila)
+        
+
+    </script>
+    
+</body>
+</html>
