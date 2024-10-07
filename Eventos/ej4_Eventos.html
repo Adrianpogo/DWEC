@@ -1,50 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Checkbox con imagen</title>
     <style>
-        
-        
+        #imagen {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    
-    <!--
-    
-    Vamos a tener 6 inputs de tipo checkbox y un botón para lanzar la funcionalidad.
+    <form id="formulario">
+        <label><input type="checkbox" class="checkbox" value="1"> Opción 1</label><br>
+        <label><input type="checkbox" class="checkbox" value="2"> Opción 2</label><br>
+        <label><input type="checkbox" class="checkbox" value="3"> Opción 3</label><br>
+        <label><input type="checkbox" class="checkbox" value="4"> Opción 4</label><br>
+        <label><input type="checkbox" class="checkbox" value="5"> Opción 5</label><br>
+        <label><input type="checkbox" class="checkbox" value="6"> Opción 6</label><br><br>
+        <button type="button" id="enviar">Enviar</button>
+    </form>
+    <img id="imagen" src="" alt="Imagen">
 
-    Cuando se haga click sobre el botón hay que realizar la siguiente funcionalidad:
-        1.  En caso de que se haga click sobre los checkbox pares se debe mostrar una imagen (seleccionar la que tú quieras)
-        2.  En caso de hacer click sobre los checkbox impares se debe mostrar otra imagen diferente (seleccionar la que tú quieras).
-        3.  Solo se puede ver una de las dos imágenes
-        4.  Solo puede haber 3 checkbox marcados al mismo tiempo. En caso de intentar marcar el 4º se debe deseleccionar el resto de checkboxs.
-   
-    Cuando se haga click sobre la imagen hay que hacer lo siguiente:
-        1.  Hay que agrandar la imagen, en caso de que sea la imagen de los checkbox pares.
-        2.  Hay que empequeñecer la imagen en caso de que sea la imagen de los checkbox impares.
+    <script>
+        var checkboxes = document.querySelectorAll('.checkbox');
+        var enviarBtn = document.getElementById('enviar');
+        var imagen = document.getElementById('imagen');
+        var checkedArray = [];
 
-    -->
+        // Función para manejar el cambio en los checkboxes
+        function manejarCambioCheckbox(checkbox) {
+            if (checkbox.checked) {
+                checkedArray.push(checkbox); // Añade el checkbox al array
+                if (checkedArray.length > 3) {
+                    // Si hay más de 3, desmarca el primero y lo quita del array
+                    checkedArray[0].checked = false;
+                    checkedArray.shift();
+                }
+            } else {
+                // Si el checkbox es desmarcado, lo quitamos del array
+                checkedArray = checkedArray.filter(function(item) {
+                    return item !== checkbox;
+                });
+            }
+        }
 
-    <!-------------------------------------------------------------------------------------------------->
+        // Función para comprobar los checkboxes y mostrar la imagen
+        function comprobarCheckboxes() {
+            var checkedValues = checkedArray.map(function(checkbox) {
+                return parseInt(checkbox.value);
+            });
 
-    <input type="checkbox">
-    <input type="checkbox">
-    <input type="checkbox">
-    <input type="checkbox">
-    <input type="checkbox">
-    <input type="checkbox">
+            var pares = [2, 4, 6];
+            var impares = [1, 3, 5];
 
-    <button>Click</button>
+            // Comprobamos si están marcados todos los pares
+            if (pares.every(function(val) {
+                return checkedValues.includes(val);
+            })) {
+                mostrarImagen('200px');  // Mostrar imagen con tamaño normal
+            }
+            // Comprobamos si están marcados todos los impares
+            else if (impares.every(function(val) {
+                return checkedValues.includes(val);
+            })) {
+                mostrarImagen('400px');  // Mostrar imagen más grande
+            } else {
+                ocultarImagen();  // Si no coincide, ocultar la imagen
+            }
+        }
 
-    <!-------------------------------------------------------------------------------------------------->
+        // Función para mostrar la imagen
+        function mostrarImagen(tamano) {
+            imagen.style.width = tamano;
+            imagen.style.display = 'block';
+        }
 
-    <script type="text/javascript">
-       
+        // Función para ocultar la imagen
+        function ocultarImagen() {
+            imagen.style.display = 'none';
+        }
 
+        // Añadir el evento 'change' a cada checkbox
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                manejarCambioCheckbox(checkbox);
+            });
+        });
+
+        // Añadir el evento 'click' al botón de enviar
+        enviarBtn.addEventListener('click', comprobarCheckboxes);
     </script>
-
-    
 </body>
 </html>
