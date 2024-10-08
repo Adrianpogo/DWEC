@@ -188,6 +188,8 @@ PASO 3 --  Asociar la función a una acción que yo haga sobre un elemento HTML 
         arrayBotones[i].addEventListener("click",agregarTextoInput)
     }
 
+    arrayBotones.forEach(boton => boton.addEventListener("click",agregarTextoInput))
+
 
 // ========================================================== LISTA EVENTOS  ========================================================== //
 
