@@ -20,6 +20,10 @@
     parseInt("7")
     parseFloat("7.9")
 
+-- Número aleatorio
+
+    numeroAleatorio = Math.floor(Math.random() * 10) + 1;
+
 // ========================================================== OPERADORES  ========================================================== //
 
 -- Operadores Comparación
