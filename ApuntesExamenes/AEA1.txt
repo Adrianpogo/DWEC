@@ -22,7 +22,8 @@
 
 -- Número aleatorio
 
-    numeroAleatorio = Math.floor(Math.random() * 10) + 1;
+    numeroAleatorio1-10 = Math.floor(Math.random() * 10) + 1;
+    numeroAleatorioMinMax = Math.floor(Math.random() * (max - min + 1) + min);
 
 // ========================================================== OPERADORES  ========================================================== //
 
