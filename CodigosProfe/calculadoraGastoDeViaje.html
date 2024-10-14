@@ -134,8 +134,10 @@ Requisitos:
         diasCorrecto =true
       }else if (!days){
         errorDays.innerHTML="Rellene este campo"
+        diasCorrecto =false
       }else{
         errorDays.innerHTML="Número de días no válido, reserve al menos 3 días"
+        diasCorrecto =false
       }
 
       // Comprobar DailyCost
@@ -146,41 +148,56 @@ Requisitos:
         costeCorrecto=true
       }else if (!dailyCost){
         errorDailyCost.innerHTML="Rellene este campo"
+        costeCorrecto=false
       }else{
         errorDailyCost.innerHTML="Número de coste diario no válido"
+        costeCorrecto=false
       }
 
       // Comprobar FlightCost
       var errorFlightCost = document.querySelector("#error-flight")
-      if(flightCost<1){
-        errorFlightCost.innerHTML="Número de coste de vuelo no válido"
-      }else{
+      var vuelosCorrecto
+      if(flightCost>=0){
         errorFlightCost.innerHTML=""
+        vuelosCorrecto = true
+      }else{
+        errorFlightCost.innerHTML="Número de coste de vuelo no válido"
+        vuelosCorrecto = false
       }
 
       // Comprobar OtherCost
       var errorOtherCost = document.querySelector("#error-other")
-      if(otherCosts<1){
-        errorOtherCost.innerHTML="Número de coste de otros no válido"
-      }else{
+      var otrosCorrecto
+      if(otherCosts>=0 ){
         errorOtherCost.innerHTML=""
+        otrosCorrecto = true
+      }else{
+        errorOtherCost.innerHTML="Número de coste de otros no válido"
+        otrosCorrecto=false
       }
 
-      if (diasCorrecto && costeCorrecto){
-         // Calcular el gasto total estimado
-        var totalCost = (days * dailyCost) + flightCost + otherCosts;
 
-        // Mostrar los detalles del viaje
-        var travelDetails = "<p>Cantidad de días: " + days + "</p>" +
-          "<p>Costo diario estimado: " + dailyCost + "</p>" +
-          "<p>Costo de vuelo: " + flightCost + "</p>" +
-          "<p>Costo de otros gastos: " + otherCosts + "</p>";
 
+      // Calcular el gasto total estimado
+      var totalCost = (days * dailyCost) + flightCost + otherCosts;
+
+      // Mostrar los detalles del viaje
+      var travelDetails = "<p>Cantidad de días: " + days + "</p>" +
+        "<p>Costo diario estimado: " + dailyCost + "</p>" +
+        "<p>Costo de vuelo: " + flightCost + "</p>" +
+        "<p>Costo de otros gastos: " + otherCosts + "</p>";
+
+      if (diasCorrecto && costeCorrecto && vuelosCorrecto && otrosCorrecto){
         document.getElementById("travelDetails").innerHTML = travelDetails;
 
         // Mostrar el gasto total estimado
         document.getElementById("totalCost").innerHTML = "<p>Gasto Total Estimado: " + totalCost + "</p>";
         document.getElementById("mediaCost").innerHTML = "<p>Gasto Medio Estimado por Día: " + Math.round(totalCost / days, 2) + "</p>";
+
+      }else{
+        document.getElementById("travelDetails").innerHTML = "";
+        document.getElementById("totalCost").innerHTML = "";
+        document.getElementById("mediaCost").innerHTML = "";
       }
       
     });
