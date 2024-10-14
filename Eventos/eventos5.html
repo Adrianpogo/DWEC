@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        div{
+            margin: 10px;
+            padding: 5px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <form action="" id="formulario">
+
+        <div>
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre">
+            <span class="error" id="error-nombre"></span>
+        </div>
+        <div>
+            <label for="email">Correo Electrónico</label>
+            <input type="text" id="email" name="email">
+            <span class="error" id="error-email"></span>
+        </div>
+        <div>
+            <label for="contraseña">Contraseña</label>
+            <input type="password" id="contraseña" name="contraseña">
+            <span class="error" id="error-contraseña"></span>
+        </div>
+        <div>
+            <label for="contraseña">Contraseña</label>
+            <input type="password" id="contraseñaRepetida" name="contraseñaRepetida">
+            <span class="error" id="error-contraseña"></span>
+        </div>
+
+        <div>
+            <button type="submit">Enviar</button>
+        </div>
+
+
+    </form>
+
+    <!--
+    <div>
+        <div>
+            hola
+        </div>
+    </div>
+    -->
+    
+
+    <script>
+
+        var form = document.querySelector("#formulario")
+
+        
+        
+
+        form.addEventListener("submit",(e)=>{
+
+            e.preventDefault()
+            var cv = e.target.checkValidity() // -- Comprueba si se cumplen las condiciones basicas del HTML
+
+            var nombre = document.querySelector("#nombre")
+            var email = document.querySelector("#email")
+            var contraseña = document.querySelector("#contraseña")
+            var contraseñaRepetida = document.querySelector("#contrasñaRepetida")
+
+            if (!nombre){
+                nombre.nextElementSibling().innerHTML = "No ha introducido nombre"
+            }
+        })
+
+        //En un formualario hay que hacer comprobaciones
+        
+
+        /*
+
+        var divs = Array.from(document.querySelectorAll("div"))
+        divs.forEach(div => { 
+            div.addEventListener("click",hola)
+        })
+
+        function hola (e){
+            e.preventDefault() // -- Se usa para prevenir que al tener una estructura con hijos se repita el evento  
+            console.log(e.target)
+        }
+        
+        */
+
+    </script>
+    
+</body>
+</html>
