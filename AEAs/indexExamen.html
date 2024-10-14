@@ -1,0 +1,240 @@
+<!---
+
+Desarrolla una página web que cumpla con los siguientes requisitos:
+
+Estructura HTML:
+    Crea una tabla con 12 filas, cada una con una celda que contenga el texto "Producto1", "Producto2", ..., hasta "Producto12".
+    La tabla debe estar rodeada por un borde sólido.
+    Dentro del documento HTML, agrega cuatro botones con los siguientes textos:
+            "Poner los div con color verde".
+            "Poner los div con borde".
+            "Reiniciar estilos div".
+            "Automático"
+    Crea tres elementos <div>, cada uno de ellos debe contener un párrafo con el texto "párrafo".
+
+    
+Estilos CSS:
+    Crea un archivo externo de estilos llamado estilos.css y vincúlalo a tu HTML.
+    Define las siguientes clases en el archivo CSS:
+        fondoAzul: Aplica un fondo azul.
+        fondoAmarillo: Aplica un fondo amarillo.
+        fondoRojo: Aplica un fondo rojo.
+
+
+Interactividad con JavaScript:
+    Al hacer clic en una fila de la tabla:
+        La fila seleccionada se debe colorear según las siguientes reglas:
+            Si es una de las primeras 6 filas clicadas, su color de fondo debe ser azul.
+            Si está entre la 7ª y la 9ª fila clicada, el fondo debe ser amarillo.
+            Si es la 10ª fila clicada, el fondo debe ser rojo.
+        Solo se puede colorear un máximo de 10 filas. Si se selecciona una fila adicional, la primera en haber sido seleccionada debe deshacerse de su color.
+    El evento de coloreado debe ser reversible. Si se hace clic en una fila ya seleccionada, esta debe volver a su color original (blanco) y debe salir de la lista de seleccionadas.
+    Los botones deben realizar las siguientes funciones al ser presionados:
+        El botón "Poner los div con color verde" debe poner el fondo verde en todos los <div>.
+        El botón "Poner los div con borde" debe aplicar un borde negro sólido de 1px a todos los <div>.
+        El botón "Reiniciar estilos div" debe quitar todos los estilos aplicados a los <div> (borde y fondo verde).
+        El botón "automático" deberá poner los antes mencionados de forma alterna cada 5s:
+            Primero pondrá el color de fondo y luego los estilos del borde. Tienen que ser alternos, por lo que solo habrá uno u otro.
+            Esto solo parará en caso de que vuelva pulsar sobre el botón de automático.
+
+Puntuación
+    La parte de los botones con los div -> 2 puntos
+    La parte del botoón 'automático'    -> 1 puntos
+    La parte de la tabla                -> 7 puntos
+
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="estilos.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Adrián Pousa</h1>
+
+    <table class="borde">
+        <tr>
+            <td>Producto1</td>
+        </tr>
+        <tr>
+            <td>Producto2</td>
+        </tr>
+        <tr>
+            <td>Producto3</td>
+        </tr>
+        <tr>
+            <td>Producto4</td>
+        </tr>
+        <tr>
+            <td>Producto5</td>
+        </tr>
+        <tr>
+            <td>Producto6</td>
+        </tr>
+        <tr>
+            <td>Producto7</td>
+        </tr>
+        <tr>
+            <td>Producto8</td>
+        </tr>
+        <tr>
+            <td>Producto9</td>
+        </tr>
+        <tr>
+            <td>Producto10</td>
+        </tr>
+        <tr>
+            <td>Producto11</td>
+        </tr>
+        <tr>
+            <td>Producto12</td>
+        </tr>
+        
+    </table>
+
+    <div>
+        <div>
+            <p>párrafo</p>
+        </div>
+        <div>
+            <p>párrafo</p>
+        </div>
+        <div>
+            <p>párrafo</p>
+        </div>
+    
+        <button class="botonColor">Poner los div con color verde</button>
+        <button class="botonBorde">Poner los div con borde</button>
+        <button class="botonReinicio">Reiniciar estilos div</button>
+        <button class="botonAutomatico">Automático</button>
+    </div>
+    
+   
+    
+</body>
+<script>
+
+    //Recogemos las variables necesarias 
+    var botonColor = document.querySelector(".botonColor")
+    var botonBorde = document.querySelector(".botonBorde")
+    var botonReinicio = document.querySelector(".botonReinicio")
+    var botonAutomatico = document.querySelector(".botonAutomatico")
+    var divs = botonColor.parentElement.querySelectorAll("div")
+
+    //Función para cambiar el color del fondo de los divs
+    function cambiarColor (){
+        divs.forEach(div=>{
+            div.classList.add("fondoVerde")
+        })
+    }
+
+    //Función para añadir borde a los divs
+    function añadirBorde (){
+        divs.forEach(div=>{
+            div.classList.add("borde")
+        })
+    }
+
+    //Función para reiniciar los estilos de los divs
+    function reinicio (){
+        divs.forEach(div=>{
+            div.classList.remove("fondoVerde")
+            div.classList.remove("borde")
+        })
+        
+    }
+
+    var intervalo
+    var encendido=true
+    //Función para aplicar estilos automáticamente
+    function automatico(){
+
+        if(encendido){
+            intervalo = setInterval(() => {
+            if(divs[0].classList=="fondoVerde"){
+                añadirBorde()
+            }else if (divs[0].classList==""){
+                cambiarColor()
+            }else{
+                reinicio()
+            }
+        }, 2000);
+            encendido=false
+        }else{
+            clearInterval(intervalo)
+            encendido = true
+        }
+
+    }   
+
+
+    //Asignación de eventos
+    botonColor.addEventListener("click",cambiarColor)
+    botonBorde.addEventListener("click",añadirBorde)
+    botonReinicio.addEventListener("click", reinicio)
+    botonAutomatico.addEventListener("click", automatico)
+    
+
+
+
+
+
+
+
+    var arraySeleccionados = []
+    var filas = document.querySelectorAll("td")
+
+    function pintarTabla(e){
+        if(!arraySeleccionados.includes(e.target)){
+            if(arraySeleccionados.length < 10){
+                arraySeleccionados.push(e.target)
+                descolorearArray()
+                colorearArray()
+            }else{
+                arraySeleccionados[0].classList=""
+                arraySeleccionados.shift()
+                arraySeleccionados.push(e.target)
+                descolorearArray()
+                colorearArray()
+            }
+        }else{
+
+           //No sé como borrar un elemento concreto del array
+            
+           // COMPLETAR
+
+        }
+    }
+
+    //Función auxiliar para quitar los colores del array
+    function descolorearArray (){
+        arraySeleccionados.forEach(elem=>{elem.classList=""})
+    }
+
+    //Función auxiliar para asignar colores al array
+    function colorearArray (){
+        contador = 0
+        for (contador ; contador < arraySeleccionados.length; contador++){
+            if (contador < 6) {
+                arraySeleccionados[contador].classList.add("fondoAzul")
+            }else if (contador >=6  && contador <=8){
+                arraySeleccionados[contador].classList.add("fondoAmarillo")
+            }else{
+                arraySeleccionados[contador].classList.add("fondoRojo")
+            }
+        }
+
+    }
+       
+    filas.forEach(fila=>fila.addEventListener("click",pintarTabla))
+    
+</script>
+
+</html>
