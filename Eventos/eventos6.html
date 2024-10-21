@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        .fila{
+            display: flex;
+        
+        }
+        .cabecera{
+            border: 1px solid black;
+            width: 100px;
+            height: 100px;
+            line-height: 25px;
+            border-right: none;
+        }
+
+        #s{
+            background-color: rgb(16, 118, 177);
+        }
+        #a{
+            background-color: rgb(44, 161, 44);
+        }
+        #b{
+            background-color: rgb(204, 174, 40);
+        }
+        #c{
+            background-color: rgb(180, 117, 75);
+        }
+        #d{
+            background-color: rgb(141, 18, 18);
+        }
+        
+        p{
+            margin-left: 35px ;
+            font-size: 35px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.781) ;
+        }
+
+        .contenido{
+            border: 1px solid black;
+            width: 1000px;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.781); 
+            border-left: none;
+        }
+
+        .eliminar {
+            border: 1px solid black;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.781);
+        }
+
+        button{
+            width: 100px;
+            height: 100px;
+            background-color: whitesmoke;
+            font-size: 20px;
+            border: none;
+        }
+
+        button:hover{
+            background-color: rgba(0, 0, 0, 0.781);
+            color: white;
+            cursor: pointer;
+        }
+
+        .reset{
+            
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        .reset button{
+            margin-top: 20px;
+            width: 200px;
+            height: 50px;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.781);
+            color: whitesmoke;
+            
+        }
+
+        .reset button:hover{
+            background-color: rgba(165, 42, 42, 0.664);
+            
+        }
+
+        .imagenes{
+            margin-top: 50px ;
+            max-width: 1200px;
+            border: 1px solid black;
+            background-color: rgba(0, 0, 0, 0.781); 
+            min-height: 100px;
+        }
+        img{
+            height: 100px;
+            width: auto;
+        }
+        .imagenColocar {
+            opacity: .5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fila">
+        <div class="cabecera" id="s"><p>S</p></div>
+        <div class="contenido"></div>
+        <div class="eliminar"><button class="botonEliminar">Resetear fila</button></div>
+    </div>
+    <div class="fila">
+        <div class="cabecera" id="a"><p>A</p></div>
+        <div class="contenido"></div>
+        <div class="eliminar"><button class="botonEliminar">Resetear fila</button></div>
+    </div>
+    <div class="fila">
+        <div class="cabecera" id="b"><p>B</p></div>
+        <div class="contenido"></div>
+        <div class="eliminar"><button class="botonEliminar">Resetear fila</button></div>
+    </div>
+    <div class="fila">
+        <div class="cabecera" id="c"><p>C</p></div>
+        <div class="contenido"></div>
+        <div class="eliminar"><button class="botonFila">Resetear fila</button></div>
+    </div>
+    <div class="fila">
+        <div class="cabecera" id="d"><p>D</p></div>
+        <div class="contenido"></div>
+        <div class="eliminar"><button class="botonEliminar">Resetear fila</button></div>
+    </div>
+
+    <div class="reset">
+        <button class="botonEliminarTodo">Resetear TierList</button>
+    </div>
+
+    <div class="imagenes">
+        <img src="img/c1.png" alt="" draggable="true">
+        <img src="img/c2.png" alt="" draggable="true">
+        <img src="img/c3.png" alt="" draggable="true">
+        <img src="img/c4.png" alt="" draggable="true">
+        <img src="img/c5.png" alt="" draggable="true">
+        <img src="img/c6.png" alt="" draggable="true">
+        <img src="img/c7.png" alt="" draggable="true">
+        <img src="img/c8.png" alt="" draggable="true">
+        <img src="img/c9.png" alt="" draggable="true">
+        <img src="img/c10.png" alt="" draggable="true">
+        <img src="img/c11.png" alt="" draggable="true">
+        <img src="img/c12.png" alt="" draggable="true">
+        <img src="img/c13.png" alt="" draggable="true">
+        <img src="img/c14.png" alt="" draggable="true">
+        <img src="img/c15.png" alt="" draggable="true">
+        <img src="img/c16.png" alt="" draggable="true">
+    </div>
+
+    <script>
+
+        //Elementos a mover-origen-destino
+        var imagenes = document.querySelectorAll("img")
+        var divInicial = document.querySelector(".imagenes")
+        var divDestino =  document.querySelectorAll(".contenido")
+        var botonesEliminar = Array.from(document.querySelectorAll(".botonEliminar"))
+        var eliminarTodo = document.querySelector(".botonEliminarTodo")
+
+        //Variable global para recoger el elemento a mover
+        var imagen = null
+        var divposible = null
+        var numImg
+        var imagenesEliminar
+
+        var dragStart = (event) => {
+            imagen = event.target
+        }
+
+        var drop = (event) => {
+            
+            var numImg = event.target.tagName == "IMG" ? event.target.closest("div").querySelectorAll("img").length : event.target.querySelectorAll("img").length
+
+            if (numImg <= 5){
+                if( event.target.tagName == "IMG"){
+                    //event.target.closest("div").appendChild(imagen) --> Otra posible forma sin usar la variable "divposible"
+                    divposible.appendChild(imagen)
+                }else{
+                    event.target.appendChild(imagen)
+                }   
+            }else{
+                divInicial.appendChild(imagen)
+            }
+            imagen.classList.remove("imagenColocar")
+            
+        }
+
+        var dragOver = (event) => {
+            event.preventDefault()
+        }
+
+        var dragEnter = (event) => {
+            divposible = event.target.closest("div")
+
+            //Para colocar la imagen cuando vamos pasando por encima
+            imagen.classList.add("imagenColocar")
+            event.target.closest("div").appendChild(imagen)
+        }
+
+        var dragLeave = (event) => {
+
+        }
+
+        //Asignación de eventos
+        imagenes.forEach(img=> img.addEventListener("dragstart",dragStart))
+
+        divInicial.addEventListener("drop", drop)
+        divInicial.addEventListener("dragenter", dragEnter)
+        divInicial.addEventListener("dragleave", dragLeave)
+        divInicial.addEventListener("dragover", dragOver)
+        
+        divDestino.forEach(div=>{
+            div.addEventListener("drop",drop)
+            div.addEventListener("dragenter", dragEnter)
+            div.addEventListener("dragleave",dragLeave)
+            div.addEventListener("dragover",dragOver)
+        })
+
+
+        function eliminarFila (e){
+            var imagenesFila = e.target.parentElement.previousElementSibling.querySelectorAll("img")
+            e.target.parentElement.previousElementSibling.innerHTML = "" 
+            imagenesFila.forEach(img => divInicial.appendChild(img))
+        }
+
+        botonesEliminar.forEach(boton => boton.addEventListener("click", eliminarFila))
+
+        function eliminarTabla (e){
+            divDestino.forEach(div=> div.innerHTML="")
+            debugger
+        }
+
+        eliminarTodo.addEventListener("click", eliminarTabla)
+
+    </script>
+    
+</body>
+</html>
