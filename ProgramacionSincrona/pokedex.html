@@ -9,10 +9,15 @@
             margin: 0;
             padding: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: rgb(189, 206, 194);
+            
         }
+
+        body{
+            background-color: rgb(216, 225, 226);
+        }
+
         select{
-            margin-bottom: 20px;
+            margin: 20px ;
             width: 200px;
             height: 50px;
             font-size: 16px;
@@ -21,7 +26,7 @@
         }
 
         option{
-            background-color: rgb(25, 51, 33);
+            background-color: rgb(25, 35, 51);
             font-size: 16px;
             color: white;
         }
@@ -31,33 +36,55 @@
         }
 
         button{
-            background-color: whitesmoke;
+            background-color: rgb(25, 35, 51);
             font-size: 16px;
             width: 200px;
             height: 50px;
             border: none;
             border-radius: 10px;
+            color: whitesmoke;
         }
 
         button:hover{
             cursor: pointer;
-            background-color: rgb(25, 51, 33);
-            color: white;
+            background-color: rgb(174, 184, 192);
+            color: black;
+        }
+        
+        img{
+            width: 100%;
         }
 
         table{
             text-align: center;
             border: 2px solid black;
+            border-collapse: collapse;
         }
 
         th{
-            background-color: rgb(25, 51, 33);
+            background-color: rgb(25, 35, 51);
             color: whitesmoke;
             padding: 10px;
             width: 150px;
         }
 
-        
+        table tr:nth-last-child(odd){
+            background-color: rgb(217, 230, 241);
+            font-size: 20px;
+        }
+
+        table tr:nth-last-child(even){
+            background-color: rgb(174, 184, 192);
+            font-size: 20px;
+        }
+
+        .id{
+            background-color:rgb(25, 35, 51) ;
+            color: whitesmoke;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -65,35 +92,39 @@
     <select class="desplegable"></select>
     <button class="botonInfo"> Buscar info</button>
     <button class="botonTodos">Buscar todos</button>
+    <button class="botonTodosOrdenados">Buscar ordenados</button>
 
-    <table>
-        <thead>
-            <th>ID POKÉDEX</th>
-            <th>NOMBRE</th>
-            <th>HABILIDAD PRINCIPAL</th>
-            <th>TIPO PRINCIPAL</th>
-            <th>IMAGEN FRONTAL (macho)</th>
-            <th>IMAGEN TRASERA (macho)</th>
-            <th>IMAGEN FRONTAL (hembra)</th>
-            <th>IMAGEN TRASERA (hembra)</th>
-            <th>IMAGEN FRONTAL SHINNY (macho)</th>
-            <th>IMAGEN TRASERA SHINNY (macho)</th>
-            <th>IMAGEN FRONTAL SHINNY (hembra)</th>
-            <th>IMAGEN TRASERA SHINNY (hembra)</th>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <th>ID POKÉDEX</th>
+                <th>NOMBRE</th>
+                <th>HABILIDADES</th>
+                <th>TIPO PRINCIPAL</th>
+                <th>IMAGEN FRONTAL (macho)</th>
+                <th>IMAGEN TRASERA (macho)</th>
+                <th>IMAGEN FRONTAL (hembra)</th>
+                <th>IMAGEN TRASERA (hembra)</th>
+                <th>IMAGEN FRONTAL SHINNY (macho)</th>
+                <th>IMAGEN TRASERA SHINNY (macho)</th>
+                <th>IMAGEN FRONTAL SHINNY (hembra)</th>
+                <th>IMAGEN TRASERA SHINNY (hembra)</th>
+            </thead>
+            <tbody>
+    
+            </tbody>
+        </table>
+    
 
     <script>
         var desplegable = document.querySelector(".desplegable")
         var botonInfo = document.querySelector(".botonInfo")
         var botonTodos = document.querySelector(".botonTodos")
+        var botonTodosOrdenados = document.querySelector(".botonTodosOrdenados")
         var tabla = document.querySelector("tbody")
 
+
         function cargarSelect (){
-            fetch("https://pokeapi.co/api/v2/pokemon?limit=125&offset=0")
+            fetch("https://pokeapi.co/api/v2/pokemon?limit=100&offset=0")
             .then((item)=>{
                 return item.json()
             }) .then((item)=>{
@@ -113,19 +144,116 @@
         cargarSelect()
 
         function cargarInfo (){
+            tabla.innerHTML = ""
             fetch("https://pokeapi.co/api/v2/pokemon/"+ desplegable.value)
             .then((item)=>{
                 return item.json()
             }).then((item)=>{
-                
+                var fila = `
+                            <tr>
+                                <td class="id">`+ item.id +`</td>
+                                <td>`+ item.name.toUpperCase() +`</td>
+                                <td>`+ comprobarHabilidades(item.abilities)  +`</td>
+                                <td>`+ item.types[0].type.name.toUpperCase() +`</td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_default) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_default) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_female) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_female) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_shiny) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_shiny) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_shiny_female) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_shiny_female) +`></td>
+                            </tr>
+                            `
+                tabla.innerHTML = fila
             })
             .catch((error)=>{
                 console.log("Ha habido un error: " + error)
             })
         }
 
+        function comprobarHabilidades (habilidades){
+            var todasHabilidades =""
+            
+            habilidades.forEach(habilidad=>{
+                todasHabilidades +=  `
+                                    <p>` + habilidad.ability.name.toUpperCase() + `</p>
+                                    `
+            })
+            return todasHabilidades
+        }
+
+        function comprobarIMG (imagen){
+            if (imagen == null){
+                return "pokeball.png"
+            }else{
+                return imagen
+            }
+        }
+
     
+        function cargarTodos (){
+            tabla.innerHTML = ""
+            listaURL=[]
+            fetch("https://pokeapi.co/api/v2/pokemon?limit=100&offset=0")
+            .then((item)=>{
+                return item.json()
+            }) .then((item)=>{
+                
+                listaURL = cargarTodosAux(item.results)
+                listaURL.forEach(url => {
+                    fetch(url)
+                    .then((item) => {
+                        return item.json()
+                    }) .then ((item)=>{
+                        añadirFila(item)
+                    })
+                    
+                })
+                
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error" + error)
+            })
+        }
+
+        function añadirFila (item){
+            var fila = `
+                            <tr>
+                                <td class="id">`+ item.id +`</td>
+                                <td>`+ item.name.toUpperCase() +`</td>
+                                <td>`+ comprobarHabilidades(item.abilities)  +`</td>
+                                <td>`+ item.types[0].type.name.toUpperCase() +`</td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_default) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_default) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_female) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_female) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_shiny) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_shiny) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.front_shiny_female) +`></td>
+                                <td><img src=`+ comprobarIMG(item.sprites.back_shiny_female) +`></td>
+                            </tr>
+                            `
+                tabla.innerHTML += fila
+        }
+
+
+        var listaURL = []
+        function cargarTodosAux(item){
+            item.forEach(pokemon => {
+                listaURL.push(pokemon.url)
+            });
+            return listaURL
+        }
+
+
+        function cargarOrdenados (){
+           
+        }
+
         botonInfo.addEventListener("click",cargarInfo)
+        botonTodos.addEventListener("click",cargarTodos )
+        botonTodosOrdenados.addEventListener("click", cargarOrdenados)
 
     </script>
 
