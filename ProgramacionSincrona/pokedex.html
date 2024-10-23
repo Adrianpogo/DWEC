@@ -123,6 +123,7 @@
         var tabla = document.querySelector("tbody")
 
 
+        // Función para configurar el select
         function cargarSelect (){
             fetch("https://pokeapi.co/api/v2/pokemon?limit=100&offset=0")
             .then((item)=>{
@@ -135,6 +136,7 @@
             })
         }
         
+        // Función auxiliar para añadir opciones al select
         function cargarSelectAux (item) {
             item.forEach(pokemon => {
                 desplegable.innerHTML += "<option>"+ pokemon.name+"</option>"
@@ -143,6 +145,7 @@
 
         cargarSelect()
 
+        // Función para mostrar un único pokemnon (el seleccionado)
         function cargarInfo (){
             tabla.innerHTML = ""
             fetch("https://pokeapi.co/api/v2/pokemon/"+ desplegable.value)
@@ -172,6 +175,7 @@
             })
         }
 
+        // Función para comprobar el número de habilidades y devolverlas todas
         function comprobarHabilidades (habilidades){
             var todasHabilidades =""
             
@@ -192,6 +196,7 @@
         }
 
     
+        // Función para cargar todos los pokemon
         function cargarTodos (){
             tabla.innerHTML = ""
             listaURL=[]
@@ -217,6 +222,7 @@
             })
         }
 
+        // Función auxiliar para añadir una fila a la tabla
         function añadirFila (item){
             var fila = `
                             <tr>
@@ -238,6 +244,7 @@
         }
 
 
+        // Función auxiliar para cargar las URL del select y devolverlas como lista
         var listaURL = []
         function cargarTodosAux(item){
             item.forEach(pokemon => {
@@ -247,8 +254,9 @@
         }
 
 
+        // Función para cargar todos los pokemon ordenados
         function cargarOrdenados (){
-           
+            
         }
 
         botonInfo.addEventListener("click",cargarInfo)
