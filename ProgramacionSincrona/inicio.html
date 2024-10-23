@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+</head>
+<body>
+
+    <div class="contenedor"> </div>
+
+    <script>
+        
+        function ejemplo1 (){
+            return new Promise((resolve) => {
+                resolve(132)
+
+            })
+        }
+
+        /*
+        Promise {<fulfilled>: undefined}
+        [[Prototype]]: Promise
+        [[PromiseState]]: "fulfilled" (inidca que se ha resulto correctamente)
+        [[PromiseResult]]: undefined (dentro del result podemos meter cualquier dato o estructura)
+        */
+
+        function ejemplo2 (){
+            return new Promise((resolve,reject) => {
+                resolve(132)
+                reject("Ha habido un error")
+
+            })
+        }
+
+        // Las promesas solo pueden tener un estado, si llega al resolve, nunca llegará al reject
+
+
+        function ejemplo3 (){
+            var promesa = new Promise((resolve,reject)=>{
+                var num= 123
+                resolve({error:false, result:num})
+            })
+
+            promesa.then((item)=>{
+                console.log("Promesa cumplida correctamente")
+                console.log("El valor devuelto es: " + item.result)
+            }).catch((error)=>{
+                console.log("Promesa cumplida de forma errónea")
+                console.log("El valor devuelto es: " + error.error)
+            }) // Para capturar los datos que lleguen desde el resolve (then) y del reject (catch)
+        }
+
+        function ejemplo4 (){
+            var promesa = new Promise((resolve,reject)=>{
+                var num= 123
+                reject({error:true, result:num})
+            })
+
+            promesa.then((item)=>{
+                console.log("Promesa cumplida correctamente")
+                console.log("El valor devuelto es: " + item.result)
+            }).catch((error)=>{
+                console.log("Promesa cumplida de forma errónea")
+                console.log("El valor devuelto es: " + error.error)
+            }) // Para capturar los datos que lleguen desde el resolve (then) y del reject (catch)
+        }
+
+        // Esperar a que todas las promesas se resuelvan y devuelve las correctas o las incorrectas
+        function ejemplo5 (){
+            Promise.all([ejemplo1(),ejemplo1(),ejemplo1()])
+            .then((item)=>{
+                console.log("Todas las promesas se resuelven correctamente")
+                console.log("Los valores son: "+ item)
+            })
+            .catch((error)=>{
+                console.log("Alguna promesa se resuelto incorrectamente")
+            })
+        }
+
+        // Esperar a que todas las promesas se resuelvan y devuelve todas en dos bloques
+        function ejemplo6 (){
+            Promise.allSettled([ejemplo1(),ejemplo1(),ejemplo1()])
+            .then((item)=>{
+                console.log("Todas las promesas se resuelven correctamente")
+                console.log("Los valores son: "+ item)
+            })
+            .catch((error)=>{
+                console.log("Alguna promesa se resuelto incorrectamente")
+            })
+        }
+
+
+        var div = document.querySelector(".contenedor")
+
+        function ejemplo7(){
+            fetch("https://pokeapi.co/api/v2/pokemon/charizard") // Permite hacer peticiones s servidores externos devolviendo siempre una promesa
+            .then((item)=>{
+                console.log("Todo OK")
+                console.log(item)
+                return item.json() // Devulve una promesa asi que necesitamos un then anidado (el catch vale con poner solo uno)
+            }).then((item)=>{
+                console.log(item)
+                // Añadimos la imagen del json del pokemon recogido
+                div.innerHTML = "<img src="+ item.sprites.front_default +">"
+                div.innerHTML += "<p>POKEMON: <b>" + item.species.name.toUpperCase() + " </b> <br>" + "ESTADÍSTICAS: " + estadisticas(item.stats) + "</p>"
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error: " +error)
+            }) 
+        }
+
+        function estadisticas (item){
+            var texto =""
+            item.forEach(element => {
+                texto += element.stat.name + ": " + element.base_stat + " || "
+            });
+            return texto
+        }
+
+
+    </script>
+    
+</body>
+</html>

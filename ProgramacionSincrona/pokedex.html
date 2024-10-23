@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: rgb(189, 206, 194);
+        }
+        select{
+            margin-bottom: 20px;
+            width: 200px;
+            height: 50px;
+            font-size: 16px;
+            text-align: center;
+            background-color: whitesmoke;
+        }
+
+        option{
+            background-color: rgb(25, 51, 33);
+            font-size: 16px;
+            color: white;
+        }
+
+        option:hover{
+            background-color: rgb(189, 206, 194);
+        }
+
+        button{
+            background-color: whitesmoke;
+            font-size: 16px;
+            width: 200px;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        button:hover{
+            cursor: pointer;
+            background-color: rgb(25, 51, 33);
+            color: white;
+        }
+
+        table{
+            text-align: center;
+            border: 2px solid black;
+        }
+
+        th{
+            background-color: rgb(25, 51, 33);
+            color: whitesmoke;
+            padding: 10px;
+            width: 150px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    
+    <select class="desplegable"></select>
+    <button class="botonInfo"> Buscar info</button>
+    <button class="botonTodos">Buscar todos</button>
+
+    <table>
+        <thead>
+            <th>ID POKÉDEX</th>
+            <th>NOMBRE</th>
+            <th>HABILIDAD PRINCIPAL</th>
+            <th>TIPO PRINCIPAL</th>
+            <th>IMAGEN FRONTAL (macho)</th>
+            <th>IMAGEN TRASERA (macho)</th>
+            <th>IMAGEN FRONTAL (hembra)</th>
+            <th>IMAGEN TRASERA (hembra)</th>
+            <th>IMAGEN FRONTAL SHINNY (macho)</th>
+            <th>IMAGEN TRASERA SHINNY (macho)</th>
+            <th>IMAGEN FRONTAL SHINNY (hembra)</th>
+            <th>IMAGEN TRASERA SHINNY (hembra)</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script>
+        var desplegable = document.querySelector(".desplegable")
+        var botonInfo = document.querySelector(".botonInfo")
+        var botonTodos = document.querySelector(".botonTodos")
+        var tabla = document.querySelector("tbody")
+
+        function cargarSelect (){
+            fetch("https://pokeapi.co/api/v2/pokemon?limit=125&offset=0")
+            .then((item)=>{
+                return item.json()
+            }) .then((item)=>{
+                cargarSelectAux(item.results)
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error" + error)
+            })
+        }
+        
+        function cargarSelectAux (item) {
+            item.forEach(pokemon => {
+                desplegable.innerHTML += "<option>"+ pokemon.name+"</option>"
+            });
+        }
+
+        cargarSelect()
+
+        function cargarInfo (){
+            fetch("https://pokeapi.co/api/v2/pokemon/"+ desplegable.value)
+            .then((item)=>{
+                return item.json()
+            }).then((item)=>{
+                
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error: " + error)
+            })
+        }
+
+    
+        botonInfo.addEventListener("click",cargarInfo)
+
+    </script>
+
+</body>
+</html>

@@ -127,7 +127,7 @@
     <div class="fila">
         <div class="cabecera" id="c"><p>C</p></div>
         <div class="contenido"></div>
-        <div class="eliminar"><button class="botonFila">Resetear fila</button></div>
+        <div class="eliminar"><button class="botonEliminar">Resetear fila</button></div>
     </div>
     <div class="fila">
         <div class="cabecera" id="d"><p>D</p></div>
@@ -235,10 +235,13 @@
 
         botonesEliminar.forEach(boton => boton.addEventListener("click", eliminarFila))
 
-        function eliminarTabla (e){
-            divDestino.forEach(div=> div.innerHTML="")
-            debugger
-        }
+        function eliminarTabla (e) {
+        divDestino.forEach(div => {
+            var imagenesFila = div.querySelectorAll("img");
+            imagenesFila.forEach(img => divInicial.appendChild(img));
+            div.innerHTML = "";
+        });
+    }
 
         eliminarTodo.addEventListener("click", eliminarTabla)
 
