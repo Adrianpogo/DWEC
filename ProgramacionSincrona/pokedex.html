@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         *{
             margin: 0;
@@ -55,25 +57,25 @@
             width: 100%;
         }
 
-        table{
+        .tabla{
             text-align: center;
             border: 2px solid black;
             border-collapse: collapse;
         }
 
-        th{
+        .tabla th{
             background-color: rgb(25, 35, 51);
             color: whitesmoke;
             padding: 10px;
             width: 150px;
         }
 
-        table tr:nth-last-child(odd){
+        .tabla tr:nth-last-child(odd){
             background-color: rgb(217, 230, 241);
             font-size: 20px;
         }
 
-        table tr:nth-last-child(even){
+        .tabla tr:nth-last-child(even){
             background-color: rgb(174, 184, 192);
             font-size: 20px;
         }
@@ -85,6 +87,28 @@
             font-weight: bold;
         }
 
+        .modal-body{
+            display: flex;
+            width: 100%;
+        }
+
+        #imgModal{
+            width: 50%;
+            padding: 10px;
+        }
+
+        .modal-body table{
+            width: 50%;
+            padding: 10px;
+            margin-left: 50px;
+        }
+
+        .close{
+            width: 60px;
+
+        }
+
+
     </style>
 </head>
 <body>
@@ -93,8 +117,13 @@
     <button class="botonInfo"> Buscar info</button>
     <button class="botonTodos">Buscar todos</button>
     <button class="botonTodosOrdenados">Buscar ordenados</button>
+    <select class="filtro">
+        
+    </select>
+    <button class="botonTipos">Buscar por tipo</button>
+    
 
-        <table>
+        <table class="tabla">
             <thead>
                 <th>ID POKÉDEX</th>
                 <th>NOMBRE</th>
@@ -113,6 +142,28 @@
     
             </tbody>
         </table>
+
+        <div id="modal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title"></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div id="imgModal">
+                  </div>
+                  <table>
+                    <tbody id="tblModal">
+                    </tbody>
+                  </table>
+                </div>
+               
+              </div>
+            </div>
+          </div>
     
 
     <script>
@@ -121,6 +172,12 @@
         var botonTodos = document.querySelector(".botonTodos")
         var botonTodosOrdenados = document.querySelector(".botonTodosOrdenados")
         var tabla = document.querySelector("tbody")
+        var  myModal = new bootstrap.Modal(document.getElementById('modal'));
+        var botonCerrarModal = document.querySelector(".close");
+        var listaURL = []
+        var filtro = document.querySelector(".filtro")
+        var botonTipos = document.querySelector(".botonTipos")
+        
 
 
         // Función para configurar el select
@@ -142,8 +199,6 @@
                 desplegable.innerHTML += "<option>"+ pokemon.name+"</option>"
             });
         }
-
-        cargarSelect()
 
         // Función para mostrar un único pokemnon (el seleccionado)
         function cargarInfo (){
@@ -195,7 +250,6 @@
             }
         }
 
-    
         // Función para cargar todos los pokemon
         function cargarTodos (){
             tabla.innerHTML = ""
@@ -223,29 +277,35 @@
         }
 
         // Función auxiliar para añadir una fila a la tabla
-        function añadirFila (item){
-            var fila = `
-                            <tr>
-                                <td class="id">`+ item.id +`</td>
-                                <td>`+ item.name.toUpperCase() +`</td>
-                                <td>`+ comprobarHabilidades(item.abilities)  +`</td>
-                                <td>`+ item.types[0].type.name.toUpperCase() +`</td>
-                                <td><img src=`+ comprobarIMG(item.sprites.front_default) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.back_default) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.front_female) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.back_female) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.front_shiny) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.back_shiny) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.front_shiny_female) +`></td>
-                                <td><img src=`+ comprobarIMG(item.sprites.back_shiny_female) +`></td>
-                            </tr>
-                            `
-                tabla.innerHTML += fila
-        }
+        function añadirFila(item) {
+        var fila = '<tr onclick="abrirModal(this)" '+
+            'data-hp="' + item.stats.find(stat => stat.stat.name === 'hp').base_stat + '" ' +
+            'data-attack="' + item.stats.find(stat => stat.stat.name === 'attack').base_stat + '" ' +
+            'data-defense="' + item.stats.find(stat => stat.stat.name === 'defense').base_stat + '" ' +
+            'data-speed="' + item.stats.find(stat => stat.stat.name === 'speed').base_stat + '" ' +
+            'data-special-attack="' + item.stats.find(stat => stat.stat.name === 'special-attack').base_stat + '" ' +
+            'data-special-defense="' + item.stats.find(stat => stat.stat.name === 'special-defense').base_stat + '" ' +
+            'srcImagen="' + item.sprites.other.showdown.front_default+'"'+
+            '>' +
+                '<td class="id">' + item.id + '</td>' +
+                '<td>' + item.name.toUpperCase() + '</td>' +
+                '<td>' + comprobarHabilidades(item.abilities) + '</td>' +
+                '<td>' + item.types[0].type.name.toUpperCase() + '</td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.front_default) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.back_default) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.front_female) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.back_female) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.front_shiny) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.back_shiny) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.front_shiny_female) + '></td>' +
+                '<td><img src=' + comprobarIMG(item.sprites.back_shiny_female) + '></td>' +
+            '</tr>';
 
+        // Insertar la fila en la tabla
+        tabla.innerHTML += fila;
+    }
 
         // Función auxiliar para cargar las URL del select y devolverlas como lista
-        var listaURL = []
         function cargarTodosAux(item){
             item.forEach(pokemon => {
                 listaURL.push(pokemon.url)
@@ -253,15 +313,141 @@
             return listaURL
         }
 
+        // Función para cargar todos los Pokémon ordenados por ID
+        function cargarOrdenados() {
+            tabla.innerHTML = "";
+            listaURL = [];
 
-        // Función para cargar todos los pokemon ordenados
-        function cargarOrdenados (){
-            
+            fetch("https://pokeapi.co/api/v2/pokemon?limit=100&offset=0")
+            .then((item) => item.json())
+                .then((item) => {
+                    // Cargar todas las URLs de los Pokémon
+                    listaURL = cargarTodosAux(item.results);
+
+                    // Crear una lista de promesas para obtener los detalles de cada Pokémon
+                    var promesas = listaURL.map((url) =>
+                        fetch(url).then((response) => response.json())
+                    );
+
+                    // Esperar a que todas las promesas se resuelvan
+                    Promise.all(promesas)
+                    .then((pokemones) => {
+                        // Añadir cada Pokémon ordenado a la tabla
+                         pokemones.forEach((item) => {
+                            añadirFila(item);
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Ha habido un error: " + error);
+                    });
+                })
+            .catch((error) => {
+                console.log("Ha habido un error: " + error);
+            });
         }
 
+        //Función para elaborar y abir la modal
+        function abrirModal (htmlElement){
+            document.querySelector(".modal-title").innerHTML = Array.from(htmlElement.children)[1].innerHTML
+            document.querySelector("#imgModal").innerHTML = "<img src='"+ htmlElement.getAttribute("srcImagen")+"'>"
+            document.querySelector("#tblModal").innerHTML = `   <tr>
+                                                                    <td>data-hp</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-hp") +`
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>data-attack</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-attack") +`
+                                                                </tr>
+                                                                <tr>      
+                                                                    <td>data-defense</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-defense") +`
+                                                                </tr>
+                                                                <tr> 
+                                                                    <td>data-special-attack</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-special-attack") +`
+                                                                </tr>
+                                                                <tr> 
+                                                                    <td>data-special-defense</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-special-defense") +`
+                                                                </tr>   
+                                                            `
+
+            myModal.show()
+        }
+
+        //Función para ocultar y resetear la modal
+        function cerrarModal (){
+            myModal.hide()
+            document.querySelector(".modal-title").innerHTML = ""
+            document.querySelector("#imgModal").innerHTML = ""
+            document.querySelector("#tblModal").innerHTML = ""
+
+        }
+
+         // Función para configurar el select de tipos
+         function cargarSelectFiltro (){
+            fetch("https://pokeapi.co/api/v2/type")
+            .then((item)=>{
+                return item.json()
+            }) .then((item)=>{
+                cargarSelectAuxFiltro(item.results)
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error" + error)
+            })
+        }
+        
+        // Función auxiliar para añadir opciones al select
+        function cargarSelectAuxFiltro (item) {
+            item.forEach(type => {
+                filtro.innerHTML += "<option>"+ type.name+"</option>"
+            });
+        }
+
+        // Función para cargar todos los Pokémon filtrados
+        function cargarFiltrados() {
+            tabla.innerHTML = "";
+            listaURL = [];
+
+            fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
+            .then((item) => item.json())
+                .then((item) => {
+                    // Cargar todas las URLs de los Pokémon
+                    listaURL = cargarTodosAux(item.results);
+
+                    // Crear una lista de promesas para obtener los detalles de cada Pokémon
+                    var promesas = listaURL.map((url) =>
+                        fetch(url).then((response) => response.json())
+                    );
+
+                    // Esperar a que todas las promesas se resuelvan
+                    Promise.all(promesas)
+                    .then((pokemones) => {
+                        // Añadir cada Pokémon ordenado a la tabla
+                         pokemones.forEach((item) => {
+                            if (item.types[0].type.name === filtro.value){
+                                añadirFila(item)
+                            }
+                            
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Ha habido un error: " + error);
+                    });
+                })
+            .catch((error) => {
+                console.log("Ha habido un error: " + error);
+            });
+        }
+
+
+        cargarSelect()
+        cargarSelectFiltro()
         botonInfo.addEventListener("click",cargarInfo)
         botonTodos.addEventListener("click",cargarTodos )
         botonTodosOrdenados.addEventListener("click", cargarOrdenados)
+        botonCerrarModal.addEventListener("click", cerrarModal)
+        botonTipos.addEventListener("click",cargarFiltrados)
 
     </script>
 
