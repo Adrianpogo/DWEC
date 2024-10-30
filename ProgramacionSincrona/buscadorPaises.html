@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Para usar select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    <!-- Para usar notify -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: whitesmoke;
+        }
+
+        form {
+            border-radius: 10px;
+            box-shadow: 1px 1px 5px 1px rgb(112, 112, 112);
+            width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .paises{
+            border-radius: 10px;
+            box-shadow: 1px 1px 5px 1px rgb(112, 112, 112);
+            margin: 10px 10px 30px 0px;
+            padding: 10px;
+        }
+
+        .idiomas{
+            border-radius: 10px;
+            box-shadow: 1px 1px 5px 1px rgb(112, 112, 112);
+            margin: 10px 10px 30px 0px;
+            padding: 10px;
+        }
+
+        .buscador {
+            padding: 20px;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .selector {
+            padding: 20px;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .eleccionPais {
+            width: 200px;
+            margin-left: 20px;
+        }
+
+        input{
+            border: none;
+            border-bottom: 1px solid black;
+            padding: 5px;
+        }
+
+        label{
+            margin-right: 20px;
+        }
+
+        button{
+            padding: 10px;
+            font-weight: 17;
+            background-color: rgb(33, 73, 160);
+            color: whitesmoke;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover{
+            background-color:rgb(111, 123, 148);
+            cursor: pointer;
+        }
+
+        table {
+            border-radius: 10px;
+            box-shadow: 1px 1px 5px 1px rgb(112, 112, 112);
+            padding: 20px;
+            border-collapse: collapse;
+            text-align: center;
+            width: 1200px;
+            margin: 20px auto;
+        }
+
+        table th {
+            width: 200px;
+            padding: 15px;
+            background-color: rgb(111, 123, 148);
+            color: whitesmoke;
+             font-weight: bold;
+        }
+
+        table td {
+            height: 150px;
+            padding: 20px;
+            border-bottom: 2px solid rgb(111, 123, 148);
+        }
+
+        img{
+            height: 100px;
+            width: auto;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <form action="">
+        <div class="paises">
+            <h2>Buscador de paises</h2>
+            <div class="buscador">
+                <label>Introduce un país</label>
+                <input type="text" class="paisElegido" autofocus>
+            </div>
+        </div>
+        <div class="idiomas">
+            <h2>Selector de idiomas</h2>
+            <div class="selector">
+                <label>Selecciona un idioma</label>
+                <select class="eleccionPais" name="idiomas[]" multiple="multiple"></select>
+            </div>
+            
+        </div>
+        <button class="botonInfo">Buscar info</button>
+        <button class="botonMostrar">Mostrar todo de nuevo</button>
+    </form>
+
+    <table>
+        <thead class="cabeceraTabla">
+            <tr>
+                <th>""</th>
+                <th>Bandera</th>
+                <th>Nombre Pais</th>
+                <th>Nombre Pais (Otros Idiomas)</th>
+                <th>Capital</th>
+                <th>Idiomas</th>
+                <th>Mapa</th>
+            </tr>
+        </thead>
+        <tbody class="cuerpoTabla">
+
+        </tbody>
+    </table>
+
+
+    <script>
+
+        $(document).ready(function() {
+            $('.eleccionPais').select2({
+                placeholder: "Selecciona un idioma",
+                allowClear: true
+            })
+        });
+        
+        //$(".eleccionPais").val() --> Para recoger el valor del select
+        var inputPais = document.querySelector(".paisElegido")
+        var selectIdioma = document.querySelector(".eleccionPais")
+        var botonInfo = document.querySelector(".botonInfo")
+        var botonMostrar = document.querySelector(".botonMostrar")
+        var cuerpoTabla = document.querySelector(".cuerpoTabla")
+
+        //Función auxiliar para cargar los datos del select
+        function cargarSelect (){
+            fetch("https://restcountries.com/v3.1/all")
+            .then(item => {
+                return item.json()
+            }) .then((item)=>{
+                console.log(item.translations)
+                var idiomas = Object.keys(item[0].translations)
+                var options
+                idiomas.forEach(idioma => {
+                    options += "<option>"+ idioma +"</option>"
+                })
+                selectIdioma.innerHTML = options   
+            })
+            .catch(error=>{
+                console.log("Ha habido un error: " + error)
+            })
+        }
+
+        //FUnción para cargar la información de un país en la tabla
+        function cargarInfo(){
+
+            if (!inputPais.value) {
+                $.notify("Por favor ingresa un país", "error");
+                console.log("Error")
+                return;
+            }
+            
+            fetch("https://restcountries.com/v3.1/name/" + inputPais.value)
+            .then(item=>{
+                return item.json()
+            }).then(item=>{
+                console.log(item[0])
+                crearFila(item[0])
+            })
+            .catch(error=>{
+                $.notify("Pais no encontrado", "error");
+            })
+        }
+
+        //FUnción auxiliar para añadir la información del país a la tabla
+        function crearFila (pais){
+            var fila = '<tr>' +
+                '<td class="ocultar"> <button>Ocultar fila</button> </td>' +
+                '<td><img src="' + pais.flags.png + '"></td>' +
+                '<td>' +  + '</td>' +
+                '<td>' +  + '</td>' +
+                '<td>' + pais.capital + '</td>' +
+                '<td>' +  + '</td>' +
+                '<td class="ocultar"> <button>Mostrar mapa</button> </td>' +
+            '</tr>';
+
+            cuerpoTabla.innerHTML += fila;
+        }
+
+        function comprobarIdiomas (pais){
+           
+        }
+
+        function comprobarNombres (pais){
+
+        }
+
+
+        cargarSelect()
+
+
+        botonInfo.addEventListener("click", function(event) {
+            event.preventDefault(); // Evita la recarga de la página
+            cargarInfo();
+        });
+
+        botonMostrar.addEventListener("click", function(event) {
+            event.preventDefault(); // Evita la recarga de la página
+        });
+
+    </script>
+    
+</body>
+</html>
