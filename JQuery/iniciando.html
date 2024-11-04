@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> <!-- IMPORTAMOS EL JQUERY-->
+</head>
+<body>
+
+    <img src="https://img.freepik.com/foto-gratis/cierre-dientes-hombre-moreno-sonriendo_1187-5800.jpg" alt="">
+    <div id="divHola">
+        Hola
+    </div>
+    <div class="clase1 clase2 clase3">
+        Con Clases
+    </div>
+    <div class="clase1 clase2 clase3">
+        Con Clases
+    </div>
+    <button>btn0</button>
+    <button id="btn-1">btn1</button>
+    <button class="clase1 clase2 clase3">btn3</button>
+    
+    
+    <script>
+
+        // Todos los selectores de elementos se hacen con $(apuntador,) 
+        console.log($("div")) // Devuelve array con todos los div
+        console.log($("div.clase3")) // Devuelve array con los div con clase3
+        console.log($("#divHola"))
+
+        // Siempre se trata como un array
+
+        // Para añadir clases podemos usar $().addClass("clase1")
+        // Para eliminarla usamos .removeClass("")
+        // Para comprobar existe un hasClass(""), si le preguntamos por un conjunto de elementos, devuelve TRUE si alguno lo tiene
+
+        // En ambos casos devuelve el elemento con el que se entá trrabajando
+
+        $("div").css("border","1px solid black") // Asignar estilos de un elemento, con un solo parámetro deuelve el valor de la propiedad
+        // Para quitar una propiedad basta con poner "" en el segundo parámetro
+
+        $("img").attr("src") // Devuelve el src consultando los atributos de un elemento HTML, con el segundo podemos cambiar la foto
+
+
+        // Asignación de eventos 
+        $("button").on("click", decirHola)
+
+        function decirHola (){
+            console.log("Hola")
+        }
+
+        // Eventos de 1 única ejecución con "one"
+        $("#btn-1").one("click", decirHola)
+       
+
+
+    </script>
+    
+</body>
+</html>
