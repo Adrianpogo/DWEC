@@ -214,25 +214,23 @@
         //FUnción auxiliar para añadir la información del país a la tabla
         function crearFila (pais){
             var fila = '<tr>' +
-                '<td class="ocultar"> <button>Ocultar fila</button> </td>' +
+                '<td> <class="ocultar"button>Ocultar fila</button> </td>' +
                 '<td><img src="' + pais.flags.png + '"></td>' +
-                '<td>' +  + '</td>' +
+                '<td>' + pais.altSpellings[1] + '</td>' +
                 '<td>' +  + '</td>' +
                 '<td>' + pais.capital + '</td>' +
-                '<td>' +  + '</td>' +
-                '<td class="ocultar"> <button>Mostrar mapa</button> </td>' +
+                '<td>' + Object.values(pais.languages) + '</td>' +
+                '<td class="mapa"> <button onclick="abrirMapa(this)">Mostrar mapa</button> </td>' +
             '</tr>';
 
             cuerpoTabla.innerHTML += fila;
         }
 
-        function comprobarIdiomas (pais){
-           
+        function abrirMapa(htmlElement){
+            window.open()
         }
 
-        function comprobarNombres (pais){
 
-        }
 
 
         cargarSelect()
