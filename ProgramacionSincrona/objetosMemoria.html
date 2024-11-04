@@ -4,16 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            background-color: whitesmoke;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h1{
+            margin: 50px;
+        }
+
+        .botones{
+            margin-left: 50px;
+        }
+
+        button{
+            padding: 10px;
+            width: 150px;
+            font-size: 17px;
+            font-weight: bold;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+
+        button:hover{
+            cursor: pointer;
+            background-color: rgb(196, 196, 196);
+        }
+
+        .recuento{
+            margin-left: 50px;
+            margin-top: 20px;
+            border: 1px solid black;
+            
+            width: 500px;
+        }
+
+        p{
+            padding: 15px;
+            background-color: rgb(190, 190, 190);
+            
+        }
+
+        .resetear{
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
+    <h1>¿Cómo valoras nuestro servicio?</h1>
+    <div class="botones">
+        <button class="ok">OK</button>
+        <button class="regular">REGULAR</button>
+        <button class="mal">MAL</button>
+
+    </div>
+    <div class="recuento">
+        <p id="votosOk"></p>
+        <p id="votosRegular"></p>
+        <p id="votosMal"></p>
+    </div>
+
+    <button class="resetear">RESETEAR</button>
+
     <script>
+
         // window.localStorage.getItem("tasks")
         // JSON.pasrse(window.localStorage.getItem("tasks")) --> Lo convierte a JSON
         // JSON.stringify(array) --> La convierte a string
 
 
         // var txt = undefined || "" --> declara una variable dando valores por defecto
+
+
+        // EJERCICIO --> HACER UNA FUNCIONALIDAD DE VALORACIONES
+        // 3 Botones (OK, NI FU NI FA, NO OK), mostrar los votos de cada uno que no se resetan si se recarga la página
+        // Se resetan mediante un boton para restablecer contadores
+
+        var botonOk = document.querySelector(".ok")
+        var botonRegular = document.querySelector(".regular")
+        var botonMal = document.querySelector(".mal")
+        var botonResetear = document.querySelector(".resetear")
+
+        // Creamos la variable que o bien recoge el valor en memoria de votos o lo inicializa a 0 todos
+        var votos = JSON.parse(localStorage.getItem("votos")) || {ok:0, regular:0, mal:0}
+        actualizarVotos()
+
+        // Función que recible el tipo de votos y accede al elemento de la variable para sumarle 1, luego actualiza el valor del localstorage
+        function votar (tipoVoto){
+            votos[tipoVoto]++
+            localStorage.setItem("votos", JSON.stringify(votos))
+            actualizarVotos()
+        }
+
+        // Función para actualizar los votos mostrados por pantalla
+        function actualizarVotos (){
+            document.getElementById("votosOk").textContent ="OK: " + votos.ok + " votos"
+            document.getElementById("votosRegular").textContent ="REGULAR: " + votos.regular + " votos"
+            document.getElementById("votosMal").textContent ="MAL: " + votos.mal + " votos"
+        }
+
+        // Función para resetear los votos y el local storage
+        function resetearVotos (){
+            votos = {ok:0, regular:0, mal:0}
+            localStorage.setItem("votos", JSON.stringify(votos))
+            actualizarVotos()
+        }
+
+        //Asignación de eventos 
+        botonOk.addEventListener("click",() => votar("ok"))
+        botonRegular.addEventListener("click", () => votar("regular"))
+        botonMal.addEventListener("click", () => votar("mal"))
+        botonResetear.addEventListener("click", resetearVotos)
+
+
 
     </script>
     
