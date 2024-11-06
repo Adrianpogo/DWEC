@@ -6,6 +6,11 @@
     <title>Document</title>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> <!-- IMPORTAMOS EL JQUERY-->
+    <style>
+        .claseMaravillosa{
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
 
@@ -22,6 +27,10 @@
     <button>btn0</button>
     <button id="btn-1">btn1</button>
     <button class="clase1 clase2 clase3">btn3</button>
+    <input type="text">
+
+    <div id="hola">HOLA</div>
+    <div id="oculto" style="display: none;">HOLA OCULTO</div>
     
     
     <script>
@@ -54,8 +63,36 @@
 
         // Eventos de 1 única ejecución con "one"
         $("#btn-1").one("click", decirHola)
+
+        // Eventos de click
+        $("div").click(function(){
+            console.log("click")
+        })
+
+        // Eventos de hover
+        $("div").hover(function(){
+            console.log("hover")
+        })
+
+        //Recoger valor de un input
+        console.log($("input").val())
+
+        // Para recoger el valor o asignarlo de un div
+        $("div").html() // --> Lo recoge
+        $("div").html("<p>Hola</p>") // --> Lo asigna
+
+        // Si queremos añadir elementos al html ya existente
+        $("div").append("<p>Al final</p>")
+        $("div").prepend("<p>Al principio</p>")
+
+        // Comprueba si existe la clase, si existe la quita y si no existe la pone --> Además existe el addClass y removeClass
+        $("div").toggleClass("claseInventada")
        
 
+        // Hacer animaciones sencillas
+        $("#hola").on("click", function(e){
+            $("#oculto").show(100)
+        })
 
     </script>
     

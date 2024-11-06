@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pruebas JQuery</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> <!-- IMPORTAMOS EL JQUERY-->
+    <style>
+        ul {
+            list-style:none;
+            margin:0;
+            padding:0;
+        }
+        li {
+            float:left;
+            width:100px;
+            margin:0;
+            padding:0;
+            text-align:center;
+        }
+        li a {
+            display:block;
+            padding:5px 10px;
+            height:100%;
+            color:#FFF;
+            text-decoration:none;
+            border-right:1px solid #FFF;
+        }
+        li a {
+            background:url(fondo.png) repeat 0 0;
+        }
+        li a:hover {
+            background-position:50px 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    
+    <script>
+        $('#nav a')
+            .css( {backgroundPosition: "0 0"} )
+            .mouseover(function(){
+                $(this).stop().animate(
+                    {backgroundPosition:"(0 -250px)"}, 
+                    {duration:500})
+                })
+            .mouseout(function(){
+                $(this).stop().animate(
+                    {backgroundPosition:"(0 0)"}, 
+                    {duration:500})
+                })
+
+    </script>
+    
+</body>
+</html>
