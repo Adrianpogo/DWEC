@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whatsapp</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> <!-- IMPORTAMOS EL JQUERY-->
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 17px;
+        }
+
+        body{
+            display: flex;
+        }
+
+        .menu{
+            margin: 50px;
+            border: 1px solid black;
+            width: 50%;
+        }
+
+        .chat{
+            margin: 50px;
+            border: 1px solid black;
+            width: 50%;
+        }
+
+        .menu div{
+            margin: 20px;
+        }
+
+        .menu label{
+            margin-left: 5px;
+        }
+
+        .mensaje{
+            width: 500px;
+            height: 50px;
+            padding: 5px;
+        }
+
+        .u1{
+            color: blue;
+        }
+        .u2{
+            color: red;
+        }
+        .u3{
+            color: green;
+        }
+
+        .botones button{
+            width: 250px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: rgb(108, 113, 117);
+            color: whitesmoke;
+        }
+
+        .botones button:hover{
+            background-color: rgb(193, 196, 199);
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="menu">
+        <div class="usuarios">
+            <div>
+                <input type="radio" name="usuario" class="u1"><label class="u1">Usuario 1</label>
+            </div>
+            <div>
+                <input type="radio" name="usuario" class="u2"><label class="u2">Usuario 2</label>          
+            </div>
+            <div>
+                <input type="radio" name="usuario" class="u3"><label class="u3">Usuario 3</label>           
+            </div>
+        </div>
+
+        <div class="texto">
+            <input type="text" class="mensaje" placeholder="Introduzca su mensaje">
+        </div>
+         
+        <div class="botones">
+            <button class="borrar">Borrar</button>
+            <button class="enviar">Enviar</button>
+            <button class="añadir"> Añadir usuario</button>
+        </div>
+        
+    </div>
+
+    <div class="chat"> </div>
+    <script>
+
+        var contadorUsuarios = 4
+
+        //Funciuón para mandar mensajes de un usuario
+        function mandarMensaje(){
+            var input = $("input[type='radio']:checked")
+            var mensaje = $(".mensaje").val()
+            //Comprobación de si existe mensaje
+            if (mensaje==""){
+                alert("No has escrito ningun mensaje")  
+            }else{
+
+                if(input.length >0 ){
+                    $(".chat").append("<p class='"+ input.attr("class")+ "'>" + mensaje + "</p>")
+                    $(".mensaje").val("")
+                    input.prop("checked",false)
+                }else{
+                    alert("No has seleccionado ningun usuario")
+                }
+            }       
+        }
+
+        //Función para borrar un usuario y sus mensajes
+        function borrarUsuario (){
+            var input = $("input[type='radio']:checked")
+            if(input.length >0 ){
+                $("." + input.attr("class")).remove()
+            }else{
+                alert("No se ha seleccionado usuario")
+            }   
+        }
+
+        function añadirUsuario (){
+            $(".usuarios").append('<div><input type="radio" name="usuario" class="u'+ contadorUsuarios+'"><label class="u'+contadorUsuarios+'">Usuario '+contadorUsuarios+'</label></div>')
+            contadorUsuarios++
+        }
+
+        //Asignación de eventos
+        $(".enviar").on("click",mandarMensaje)
+        $(".borrar").on("click",borrarUsuario)
+        $(".añadir").on("click",añadirUsuario)
+
+    </script>
+    
+</body>
+</html>
