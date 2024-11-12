@@ -1,0 +1,198 @@
+elemento.classList.add()
+
+//==========================================================================================================================================================//
+
+// EJEMPLO BÁSICO DE CREACIÓN DE ELEMENTOS HTML
+        var div = document.querySelector("div")
+        var boton =document.querySelector("button")
+
+        function decirHola(htmlElement){
+            console.log(htmlElement)
+            console.log("Hola")
+        }
+    
+        function crearElemento (){
+            div.innerHTML += "<input onclick='decirHola(this)' type='text'/>" // EVENTOS SOBRE ELEMENTOS CREADOS (DELEGACIÓN DE EVENTOS) -- Los elementos se recogen en 
+            el futuro ya que al pincipio no estan
+        }
+
+        boton.addEventListener("click", crearElemento)
+
+//==========================================================================================================================================================//
+
+
+e.preventDefault() // -- Se usa para prevenir que al tener una estructura con hijos se repita el evento  
+
+
+form.addEventListener("submit",(e)=>{
+
+            e.preventDefault()
+            var cv = e.target.checkValidity() // -- Comprueba si se cumplen las condiciones basicas del HTML
+        })
+
+//==========================================================================================================================================================//
+
+//Elementos a mover-origen-destino
+        <img src="img/c1.png" alt="" draggable="true">
+
+
+        var imagenes = document.querySelectorAll("img")
+        var divInicial = document.querySelector(".imagenes")
+        var divDestino =  document.querySelectorAll(".contenido")
+        var botonesEliminar = Array.from(document.querySelectorAll(".botonEliminar"))
+        var eliminarTodo = document.querySelector(".botonEliminarTodo")
+
+        //Variable global para recoger el elemento a mover
+        var imagen = null
+        var divposible = null
+        var numImg
+        var imagenesEliminar
+
+        var dragStart = (event) => {
+            imagen = event.target
+        }
+
+        var drop = (event) => {
+            
+            var numImg = event.target.tagName == "IMG" ? event.target.closest("div").querySelectorAll("img").length : event.target.querySelectorAll("img").length
+
+            if (numImg <= 5){
+                if( event.target.tagName == "IMG"){
+                    //event.target.closest("div").appendChild(imagen) --> Otra posible forma sin usar la variable "divposible"
+                    divposible.appendChild(imagen)
+                }else{
+                    event.target.appendChild(imagen)
+                }   
+            }else{
+                divInicial.appendChild(imagen)
+            }
+            imagen.classList.remove("imagenColocar")
+            
+        }
+
+        var dragOver = (event) => {
+            event.preventDefault()
+        }
+
+        var dragEnter = (event) => {
+            divposible = event.target.closest("div")
+
+            //Para colocar la imagen cuando vamos pasando por encima
+            imagen.classList.add("imagenColocar")
+            event.target.closest("div").appendChild(imagen)
+        }
+
+        var dragLeave = (event) => {
+
+        }
+
+        //Asignación de eventos
+        imagenes.forEach(img=> img.addEventListener("dragstart",dragStart))
+
+        divInicial.addEventListener("drop", drop)
+        divInicial.addEventListener("dragenter", dragEnter)
+        divInicial.addEventListener("dragleave", dragLeave)
+        divInicial.addEventListener("dragover", dragOver)
+        
+        divDestino.forEach(div=>{
+            div.addEventListener("drop",drop)
+            div.addEventListener("dragenter", dragEnter)
+            div.addEventListener("dragleave",dragLeave)
+            div.addEventListener("dragover",dragOver)
+        })
+
+
+//==========================================================================================================================================================//
+
+function ejemplo7(){
+            fetch("https://pokeapi.co/api/v2/pokemon/charizard") // Permite hacer peticiones s servidores externos devolviendo siempre una promesa
+            .then((item)=>{
+                console.log("Todo OK")
+                console.log(item)
+                return item.json() // Devulve una promesa asi que necesitamos un then anidado (el catch vale con poner solo uno)
+            }).then((item)=>{
+                console.log(item)
+                // Añadimos la imagen del json del pokemon recogido
+                div.innerHTML = "<img src="+ item.sprites.front_default +">"
+                div.innerHTML += "<p>POKEMON: <b>" + item.species.name.toUpperCase() + " </b> <br>" + "ESTADÍSTICAS: " + estadisticas(item.stats) + "</p>"
+            })
+            .catch((error)=>{
+                console.log("Ha habido un error: " +error)
+            }) 
+        }
+
+
+function cargarOrdenados() {
+            tabla.innerHTML = "";
+            listaURL = [];
+
+            fetch("https://pokeapi.co/api/v2/pokemon?limit=100&offset=0")
+            .then((item) => item.json())
+                .then((item) => {
+                    // Cargar todas las URLs de los Pokémon
+                    listaURL = cargarTodosAux(item.results);
+
+                    // Crear una lista de promesas para obtener los detalles de cada Pokémon
+                    var promesas = listaURL.map((url) =>
+                        fetch(url).then((response) => response.json())
+                    );
+
+                    // Esperar a que todas las promesas se resuelvan
+                    Promise.all(promesas)
+                    .then((pokemones) => {
+                        // Añadir cada Pokémon ordenado a la tabla
+                         pokemones.forEach((item) => {
+                            añadirFila(item);
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Ha habido un error: " + error);
+                    });
+                })
+            .catch((error) => {
+                console.log("Ha habido un error: " + error);
+            });
+        }
+
+//==========================================================================================================================================================//
+
+var  myModal = new bootstrap.Modal(document.getElementById('modal'));
+
+
+//Función para elaborar y abir la modal
+        function abrirModal (htmlElement){
+            document.querySelector(".modal-title").innerHTML = Array.from(htmlElement.children)[1].innerHTML
+            document.querySelector("#imgModal").innerHTML = "<img src='"+ htmlElement.getAttribute("srcImagen")+"'>"
+            document.querySelector("#tblModal").innerHTML = `   <tr>
+                                                                    <td>data-hp</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-hp") +`
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>data-attack</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-attack") +`
+                                                                </tr>
+                                                                <tr>      
+                                                                    <td>data-defense</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-defense") +`
+                                                                </tr>
+                                                                <tr> 
+                                                                    <td>data-special-attack</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-special-attack") +`
+                                                                </tr>
+                                                                <tr> 
+                                                                    <td>data-special-defense</td>
+                                                                    <td>`+ htmlElement.getAttribute("data-special-defense") +`
+                                                                </tr>   
+                                                            `
+
+            myModal.show()
+        }
+
+        //Función para ocultar y resetear la modal
+        function cerrarModal (){
+            myModal.hide()
+            document.querySelector(".modal-title").innerHTML = ""
+            document.querySelector("#imgModal").innerHTML = ""
+            document.querySelector("#tblModal").innerHTML = ""
+
+        }

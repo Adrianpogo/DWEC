@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .verde {
+            background-color: green;
+        }
+        .rojo {
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
 
@@ -185,11 +193,21 @@
                     <td>`+ contadorFila+ `</td>
                     <td>Nombre</td>
                     <td>Apellido</td>
-                    <td><button onclick="añadirFila(this)">Añadir a la BBDD</button></td>
-                    <td><button onclick="eliminarFila(this)">Eliminar de la BBDD</button></td>
+                    <td><button onclick="añadirBBDD(this)">Añadir a la BBDD</button></td>
+                    <td><button onclick="eliminarBBDD(this)">Eliminar de la BBDD</button></td>
                 </tr>`
 
             contadorFila++
+        }
+
+        function añadirBBDD (htmlElement){
+            htmlElement.closest("tr").classList.remove("rojo")
+            htmlElement.closest("tr").classList.add("verde")
+        }
+
+        function eliminarBBDD (htmlElement){
+            htmlElement.closest("tr").classList.remove("verde")
+            htmlElement.closest("tr").classList.add("rojo")
         }
         
 
