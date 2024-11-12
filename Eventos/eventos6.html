@@ -200,6 +200,7 @@
         }
 
         var dragEnter = (event) => {
+            event.preventDefault()
             divposible = event.target.closest("div")
 
             //Para colocar la imagen cuando vamos pasando por encima
@@ -208,7 +209,8 @@
         }
 
         var dragLeave = (event) => {
-
+            event.preventDefault()
+            
         }
 
         //Asignación de eventos

@@ -97,32 +97,32 @@
         const mensaje = document.getElementById('mensaje');
 
         let terminado = imagenes.length;
-        
+
+        var aux = "";
+        for (var i = 0; i < terminado; i++) {
+            aux += "<div id='" + i + "' class='placeholder'></div>";
+        }
+        puzzle.innerHTML = aux;
+
+        aux = ""
         while (imagenes.length) {
-            const index = Math.floor(Math.random() * imagenes.length);
-            const div = document.createElement('div');
-            div.className = 'pieza';
-            div.id = imagenes[index];
-            div.draggable = true;
-            div.style.backgroundImage = `url("media/${imagenes[index]}.jpg")`;
-            piezas.appendChild(div);
-            imagenes.splice(index, 1);
+            var index = Math.floor(Math.random() * imagenes.length)
+            aux += "<img id='"+imagenes[index]+"' class='pieza' draggable src='./media/" + imagenes[index] + ".jpg' >"
+            imagenes.splice(index, 1)
         }
-
-        for (let i = 0; i < terminado; i++) {
-            const div = document.createElement('div');
-            div.className = 'placeholder';
-            div.dataset.id = i;
-            puzzle.appendChild(div);
-        }
+        piezas.innerHTML = aux
 
 
+        var imagenEnMovimiento;
         piezas.addEventListener('dragstart', e => {
-            e.dataTransfer.setData('id', e.target.id);
+            imagenEnMovimiento=e.target;
         });
 
         puzzle.addEventListener('dragover', e => {
             e.preventDefault();
+        });
+
+        puzzle.addEventListener('dragenter', e => {
             e.target.classList.add('hover');
         });
 
@@ -131,21 +131,16 @@
         });
 
         puzzle.addEventListener('drop', e => {
-            e.target.classList.remove('hover');
-
-            const id = e.dataTransfer.getData('id');
-            const numero = id.split('-')[1];
-
-            if (e.target.dataset.id === numero) {
-                e.target.appendChild(document.getElementById(id));
-
-                terminado--;
-
-                if (terminado === 0) {
-                    document.body.classList.add('ganaste');
+            var idIMG=imagenEnMovimiento.id.split("-")[1];
+            e.target.classList.remove("hover")
+            if(idIMG==e.target.id){
+                e.target.appendChild(imagenEnMovimiento)
+                terminado--
+                if(terminado==0){
+                    document.body.classList.add('ganaste')
                 }
             }
-        });
+        })
 
     </script>
 </body>
