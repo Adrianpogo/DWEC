@@ -1,0 +1,29 @@
+.contenedor-pokemones{
+    border: 1px solid black;
+}
+
+.contenedor-pantalla{
+    border: 1px solid black;
+    display: flex;
+}
+
+
+
+.pokemon{
+    border: 1px solid red;
+    width: 50%;
+    height: 400px;
+}
+
+.evoluciones{
+    border: 1px solid red;
+    width: 50%;
+    height: 400px; 
+    display: flex;
+    text-align: center;
+}
+
+.evolucion{
+    margin: 20px;
+}
+
