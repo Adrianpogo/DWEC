@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .tareasPendientes, .tareasCompletadas {
+            margin-bottom: 20px;
+        }
+        .tareasPendientes h4, .tareasCompletadas h4 {
+            display: inline-block;
+        }
+        .tareasPendientes .count, .tareasCompletadas .count {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn-limpiar">Limpiar completadas</button>
+    <input type="text" name="tarea" id="tarea">
+    <button id="btn-agregar">Agregar tarea</button>
+    
+    <div class="tareasPendientes">
+        <h4>Tareas pendientes</h4>
+        <span class="count">(0)</span>
+    </div>
+    <div class="tareasCompletadas">
+        <h4>Tareas completadas</h4>
+        <span class="count">(0)</span>
+    </div>
+    
+    <script>
+        // Actualiza el número de tareas en cada sección
+        function actualizarContador() {
+            $(".tareasPendientes .count").html($(".tareasPendientes .filaTarea").length);
+            $(".tareasCompletadas .count").html($(".tareasCompletadas .filaTarea").length);
+        }
+
+        // Funcionalidad para agregar una fila con una nueva tarea
+        $("#btn-agregar").on("click", function () {
+            var tarea = $("#tarea").val().trim();
+            
+            if (tarea) {
+                $(".tareasPendientes").append(
+                    `<div class="filaTarea">${tarea} 
+                        <input class="check" type="checkbox"> 
+                        <button class="btn-borrarTarea">Borrar tarea</button>
+                    </div>`
+                );
+                $("#tarea").val("");
+                actualizarContador();
+            } else {
+                console.log("No ha descrito la tarea");
+            }
+        });
+
+        // Funcionalidad para eliminar una fila pulsando el botón
+        $(".tareasPendientes, .tareasCompletadas").on("click", ".btn-borrarTarea", function () {
+            $(this).closest("div").remove();
+            actualizarContador();
+        });
+
+        function moverTarea(destino, elemento) {
+            $(destino).append($(elemento).closest("div"));
+            actualizarContador();
+        }
+
+        // Funcionalidad para marcar una tarea como completada
+        $(".tareasPendientes").on("click", ".check", function () {
+            moverTarea(".tareasCompletadas", this);
+        });
+
+        // Funcionalidad para marcar una tarea como pendiente
+        $(".tareasCompletadas").on("click", ".check", function () {
+            moverTarea(".tareasPendientes", this);
+        });
+
+
+        // Funcionalidad para eliminar todas las tareas completadas
+        $("#btn-limpiar").on("click", function () {
+            $(".tareasCompletadas .filaTarea").remove();
+            actualizarContador();
+        });
+
+        // Actualiza el contador al cargar
+        actualizarContador();
+    </script>
+</body>
+</html>
