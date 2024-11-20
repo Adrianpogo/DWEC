@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        .importante{
+            background-color: green;
+        }
+
+        .inactivo button{
+            opacity: .7;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+    <label>Agregar elemento: </label>
+    <input type="text" id="elemento">
+    <button id="btn-agregar">Agregar</button>
+    <div>
+        <ul id="tareas"></ul>
+    </div>
+
+    <script>
+        //Eliminar --> Elimina si no está marcado como importante
+        //Marcar como importante --> Pone un color de fondo
+        //Candado --> Al pulsar desaparece y se desabilitan los botones (en 1,5s)
+        
+        //Funcionalidad para añadir elementos a la lista
+        $("#btn-agregar").on("click", function(){
+            var elemento = $("#elemento").val().trim();
+            if(elemento){
+                $("#tareas").append(`
+                                    <li>
+                                        `+ elemento +` 
+                                        <button id="btn-eliminar">Eliminar</button> 
+                                        <button id="btn-importante">Marcar como importante</button>
+                                        <i class="fa fa-shield" style = "color:black; font-size:20px;"></i>
+                                    </li>
+                                    `);
+                $("#elemento").val("");
+            }else{
+                console.log("No has escrito ningun elemento")
+            }
+        })
+
+        //Función para eliminar una fila o desmarcar de importante
+        $("#tareas").on("click", "#btn-eliminar", function(){
+            if($(this).closest("li").hasClass("inactivo")){
+                alert("Elemento privado")
+            }else{
+                if($(this).closest("li").hasClass("importante")){
+                    $(this).closest("li").removeClass("importante")
+                }else{
+                    $(this).closest("li").remove()
+                } 
+            } 
+        })
+
+        //Función para cambiar una fila a importante si es posible
+        $("#tareas").on("click", "#btn-importante", function(){
+            if($(this).closest("li").hasClass("inactivo")){
+                alert("Elemento privado")
+            }else{
+                $(this).closest("li").addClass("importante")
+            }
+        })
+
+        //Función para cambiar una fila a inactiva en 1,5s
+        $("#tareas").on("click", "i", function(){
+            var elemento = $(this).closest("li")
+            $(this).fadeOut(1500)
+
+            setTimeout(function(){
+                elemento.addClass("inactivo")
+            }, 1500)
+        })
+
+        //Función para controlar que se realicen los eventos correctamente
+        $("ul").on("click", ".inactivo", function(e){
+            e.preventDefault()
+        })
+
+
+
+    </script>
+    
+    
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+        #tablero {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        .ficha img{
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            background-color: #ccc;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn-iniciar">Iniciar</button>
+    <button id="btn-reordenar">Reordenar cartas</button>
+
+    <table id="tablero">
+        <tr>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+        </tr>
+        <tr>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+        </tr>
+        <tr>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+        </tr>
+        <tr>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+        </tr>
+    </table>
+    
+    <script>
+
+
+        var imagenes = [
+                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', 
+                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'
+                    ];
+
+        let cartas = [];
+
+        function mezclarCartas(array) {
+            var mezcladas = []
+            var copia = array.slice() // Crear una copia del array original
+
+            while (copia.length > 0) {
+                const indiceAleatorio = Math.floor(Math.random() * copia.length)
+                mezcladas.push(copia[indiceAleatorio])
+                copia.splice(indiceAleatorio, 1) // Eliminar la carta seleccionada
+            }
+
+            return mezcladas
+        }
+
+        function cargarCartas() {
+            // Mezclar las imágenes
+            cartas = cartas = mezclarCartas(imagenes);
+
+            // Asignar imágenes a las fichas
+            $(".ficha").each(function(index) {
+                $(this).html("<img src='"+ cartas[index] +"' class='"+ cartas[index].substr(0,1) +"'>")
+                $(this).removeClass("revelada")
+            });
+        }
+
+        $("#btn-reordenar").on("click", cargarCartas)
+
+
+        var primeraCarta = null
+        var parado = null
+
+        $("#btn-iniciar").on("click", function(){
+            
+        })
+
+        $("#tablero").on("click", ".ficha", function(){
+
+        })
+
+    </script>
+
+</body>
+</html>
