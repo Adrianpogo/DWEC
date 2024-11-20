@@ -28,6 +28,9 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+        .permanente{
+            filter: brightness(.5);
+        }
     </style>
 </head>
 <body>
@@ -39,9 +42,6 @@
             <td class="ficha"></td>
             <td class="ficha"></td>
             <td class="ficha"></td>
-        </tr>
-        <tr>
-            <td class="ficha"></td>
             <td class="ficha"></td>
             <td class="ficha"></td>
         </tr>
@@ -49,8 +49,19 @@
             <td class="ficha"></td>
             <td class="ficha"></td>
             <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
         </tr>
         <tr>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
+        </tr>
+        <tr>
+            <td class="ficha"></td>
+            <td class="ficha"></td>
             <td class="ficha"></td>
             <td class="ficha"></td>
             <td class="ficha"></td>
@@ -61,49 +72,109 @@
 
 
         var imagenes = [
-                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', 
-                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'
-                    ];
+                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg',
+                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg'
+                    ]
 
-        let cartas = [];
+        var cartas = []
+        var primeraCarta = null
+        var segundaCarta = null
+        var bloqueado = false
 
         function mezclarCartas(array) {
+            var copia = array.slice()
             var mezcladas = []
-            var copia = array.slice() // Crear una copia del array original
-
-            while (copia.length > 0) {
-                const indiceAleatorio = Math.floor(Math.random() * copia.length)
-                mezcladas.push(copia[indiceAleatorio])
-                copia.splice(indiceAleatorio, 1) // Eliminar la carta seleccionada
+            while (copia.length) {
+                var indiceAleatorio = Math.floor(Math.random() * copia.length)
+                mezcladas.push(copia.splice(indiceAleatorio, 1)[0])
             }
-
             return mezcladas
         }
 
-        function cargarCartas() {
-            // Mezclar las imágenes
-            cartas = cartas = mezclarCartas(imagenes);
-
-            // Asignar imágenes a las fichas
-            $(".ficha").each(function(index) {
-                $(this).html("<img src='"+ cartas[index] +"' class='"+ cartas[index].substr(0,1) +"'>")
-                $(this).removeClass("revelada")
+        function cargarCartasInicial() {
+            // Mostrar las cartas vacías al inicio
+            $(".ficha").each(function() {
+                $(this).html("<img src=''>") // Imagen vacía
+                $(this).removeClass("revelada permanente")
             });
         }
 
-        $("#btn-reordenar").on("click", cargarCartas)
+        function cargarCartas() {
+            cartas = mezclarCartas(imagenes);
 
+            // Asignar imágenes y mostrarlas
+            $(".ficha").each(function(index) {
+                $(this).attr("data-imagen", cartas[index]);// Usar un atributo personalizado
+                $(this).html("<img src='" + cartas[index] + "'>") // Mostrar las imágenes
+                $(this).removeClass("revelada permanente")
+            });
+        }
 
-        var primeraCarta = null
-        var parado = null
+        function voltearCartas(carta) {
+            if (bloqueado || $(carta).hasClass("permanente") || $(carta).hasClass("revelada")) return
 
-        $("#btn-iniciar").on("click", function(){
-            
-        })
+            // Mostrar la imagen de la carta
+            var imagen = $(carta).attr("data-imagen")
+            $(carta).html("<img src='" + imagen + "'>").addClass("revelada")
 
-        $("#tablero").on("click", ".ficha", function(){
+            if (!primeraCarta) {
+                primeraCarta = carta
+            } else if (!segundaCarta) {
+                segundaCarta = carta
+                verificarPareja()
+            }
+        }
 
-        })
+        function verificarPareja() {
+            bloqueado = true
+            var imagen1 = $(primeraCarta).attr("data-imagen")
+            var imagen2 = $(segundaCarta).attr("data-imagen")
+
+            if (imagen1 === imagen2) {
+                // Las cartas coinciden: dejarlas reveladas permanentemente
+                $(primeraCarta).addClass("permanente")
+                $(segundaCarta).addClass("permanente")
+                resetSeleccion()
+            } else {
+                // Las cartas no coinciden: voltearlas después de 1.5 segundos
+                setTimeout(function() {
+                    $(primeraCarta).html("<img src='atras.jpg'>").removeClass("revelada")
+                    $(segundaCarta).html("<img src='atras.jpg'>").removeClass("revelada")
+                    resetSeleccion()
+                }, 1500)
+            }
+        }
+
+        function resetSeleccion() {
+            primeraCarta = null
+            segundaCarta = null
+            bloqueado = false
+
+            // Comprobar si todas las cartas están descubiertas
+            if ($(".ficha.permanente").length === $(".ficha").length) {
+                alert("¡Ganaste!")
+            }
+        }
+
+        $("#btn-iniciar").on("click", function() {
+            // Voltear todas las cartas al reverso
+            $(".ficha").each(function() {
+                $(this).html("<img src='atras.jpg'>")
+                $(this).removeClass("revelada")
+            });
+        });
+
+        $("#btn-reordenar").on("click", function() {
+            cargarCartas()
+        });
+
+        $("#tablero").on("click", ".ficha", function() {
+            voltearCartas(this)
+        });
+
+        // Cargar el tablero vacío al inicio
+        cargarCartasInicial()
+        
 
     </script>
 
