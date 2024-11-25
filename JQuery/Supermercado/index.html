@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermercado</title>
+    <!-- Importar jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body{
+            display: flex;
+        }
+
+        div{
+            margin: 30px;
+        }
+
+        table{
+            border-collapse: collapse;
+            border: 1px solid black;
+            width: 550px;
+        }
+        td{
+            padding: 10px;
+        }
+        thead tr{
+            background-color: black;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .seleccionado{
+            background-color: rgb(179, 184, 189);
+        }
+
+        .visible{
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="productos">
+        <h2>Productos</h2>
+        <table class="tablaProductos">
+            <thead>
+                <tr><td>Producto</td></tr>
+            </thead>
+            <tbody>
+                <tr data-price="0.7" class="producto" id="1"><td>Producto 1</td></tr>
+                <tr data-price="4" class="producto" id="2"><td>Producto 2</td></tr>
+                <tr data-price="7" class="producto" id="3"><td>Producto 3</td></tr>
+                <tr data-price="6.2" class="producto" id="4"><td>Producto 4</td></tr>
+                <tr data-price="2.2" class="producto" id="5"><td>Producto 5</td></tr>
+                <tr data-price="4.7" class="producto" id="6"><td>Producto 6</td></tr>
+                <tr data-price="0.2" class="producto" id="7"><td>Producto 7</td></tr>
+                <tr data-price="3.5" class="producto" id="8"><td>Producto 8</td></tr>
+                <tr data-price="7.7" class="producto" id="9"><td>Producto 9</td></tr>
+                <tr data-price="1.7" class="producto" id="10"><td>Producto 10</td></tr>
+                <tr data-price="2.3" class="producto" id="11"><td>Producto 11</td></tr>
+                <tr data-price="0.8" class="producto" id="12"><td>Producto 12</td></tr>
+                <tr data-price="3.1" class="producto" id="13"><td>Producto 13</td></tr>
+                <tr data-price="3.7" class="producto" id="14"><td>Producto 14</td></tr>
+                <tr data-price="1.7" class="producto" id="15"><td>Producto 15</td></tr>
+            </tbody>
+            
+        </table>
+
+    </div>
+
+
+    <div class="tiposProducto ">
+        <h2>Tipos de Productos</h2>
+        <table class="tablaTipoProductos">
+            <thead>
+                <tr><td>Tipo de Producto</td></tr>
+            </thead>
+            <tbody>
+                <tr><td>A granel</td></tr>
+                <tr><td>Caja 1kg</td></tr>
+                <tr><td>Caja 2kg</td></tr>
+                <tr><td>Palet</td></tr>
+        </table>
+
+    </div>
+
+
+    <div class="detalleProducto ">
+        <h2>Detalles del Producto</h2>
+        <input type="number" id="numProductos">
+        <button type="submit" id="btnComprar">Comprar</button>
+        <h2>Productos Comprados</h2>
+        <table class="tablaProductosComprados">
+            <thead>
+                <tr>
+                    <td>Productos</td>
+                    <td>Cantidad</td>
+                    <td>Tipo de Producto</td>
+                    <td>Costo</td>
+                    <td>Edición</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        var tipoProductoSeleccionado = null
+        var filaEditando = null
+
+        // Funcionalidad para seleccionar productos
+        $(".producto").on("click", function () {
+            $(this).toggleClass("seleccionado")
+            mostrarTipoProducto()
+        });
+
+        // Funcionalidad para seleccionar el tipo de producto
+        $(".tablaTipoProductos tbody tr").on("click", function () {
+            $(".tablaTipoProductos tbody tr").removeClass("seleccionado")
+            $(this).addClass("seleccionado")
+            tipoProductoSeleccionado = $(this).text()
+        })
+
+        // Funcionalidad para comprar productos
+        $("#btnComprar").on("click", function () {
+            var cantidad = parseInt($("#numProductos").val())
+
+            if (!cantidad || cantidad <= 0) {
+                alert("Cantidad errónea")
+                return
+            }
+            if (!tipoProductoSeleccionado) {
+                alert("No se ha seleccionado el tipo de producto")
+                return
+            }
+
+            var productosSeleccionados = $(".producto.seleccionado")
+            if (productosSeleccionados.length === 0) {
+                alert("No se ha seleccionado ningún producto")
+                return
+            }
+
+            var productos = []
+            var precioTotal = 0
+
+            productosSeleccionados.each(function () {
+                var nombreProducto = $(this).text()
+                var precioProducto = parseFloat($(this).data("price")) * cantidad
+                productos.push(nombreProducto)
+                precioTotal += precioProducto
+                $(this).removeClass("seleccionado")// Desmarcar producto
+            })
+
+            $(".tablaProductosComprados tbody").append(`
+                <tr class="comprado" 
+                    data-productos="${productos.join(', ')}" 
+                    data-cantidad="${cantidad}" 
+                    data-tipo="${tipoProductoSeleccionado}" 
+                    data-total="${precioTotal.toFixed(2)}">
+                    <td>${productos.join(", ")}</td>
+                    <td>${cantidad}</td>
+                    <td>${tipoProductoSeleccionado}</td>
+                    <td>${precioTotal.toFixed(2)}</td>
+                    <td>
+                        <span class="editar">Editar</span>
+                        <span class="botones-edicion">
+                            <button class="confirmar">Confirmar Edición</button>
+                            <button class="cancelar">Cancelar Edición</button>
+                        </span>
+                    </td>
+                </tr>
+            `)
+
+            resetearValores();
+        });
+
+        // Función para resetear los valores
+        function resetearValores() {
+            $(".tablaProductos tbody tr").removeClass("seleccionado")
+            $(".tablaTipoProductos tbody tr").removeClass("seleccionado")
+            $("#numProductos").val("")
+            tipoProductoSeleccionado = null
+            mostrarTipoProducto()
+        }
+
+        // Función para mostrar u ocultar tipos de producto
+        function mostrarTipoProducto() {
+            if ($(".producto.seleccionado").length > 0) {
+                $(".tiposProducto").removeClass("invisible")
+            } else {
+                $(".tiposProducto").addClass("invisible")
+            }
+        }
+
+        // Funcionalidad para editar un producto comprado
+        $(document).on("click", ".editar", function () {
+            filaEditando = $(this).closest("tr")
+
+            // Extraer datos de los atributos personalizados
+            var productos = filaEditando.data("productos").split(", ")
+            var cantidad = filaEditando.data("cantidad")
+            var tipoProducto = filaEditando.data("tipo")
+
+            // Marcar los productos seleccionados y establecer tipo de producto
+            $(".producto").each(function () {
+                if (productos.includes($(this).text())) {
+                    $(this).addClass("seleccionado")
+                } else {
+                    $(this).removeClass("seleccionado")
+                }
+            });
+
+            $(".tablaTipoProductos tbody tr").each(function () {
+                if ($(this).text() === tipoProducto) {
+                    $(this).addClass("seleccionado")
+                } else {
+                    $(this).removeClass("seleccionado")
+                }
+            });
+
+            $("#numProductos").val(cantidad);
+
+            filaEditando.find(".botones-edicion").show()
+            $(this).hide();
+        });
+
+        // Funcionalidad para confirmar la edición
+        $(document).on("click", ".confirmar", function() {
+            var cantidad = parseInt($("#numProductos").val())
+
+            if (!cantidad || cantidad <= 0) {
+                alert("Cantidad errónea")
+                return;
+            }
+
+            var productosSeleccionados = $(".producto.seleccionado")
+            if (productosSeleccionados.length === 0) {
+                alert("No se ha seleccionado ningún producto")
+                return
+            }
+
+            var productos = []
+            var precioTotal = 0;
+
+            productosSeleccionados.each(function() {
+                var nombreProducto = $(this).text();
+                var precioProducto = parseFloat($(this).data("price")) * cantidad
+                productos.push(nombreProducto)
+                precioTotal += precioProducto
+            });
+
+            filaEditando.find(".productos").text(productos.join(", "))
+            filaEditando.find(".cantidad").text(cantidad)
+            filaEditando.find(".tipo").text(tipoProductoSeleccionado)
+            filaEditando.find(".precio").text(precioTotal.toFixed(2))
+            
+
+            resetearValores();
+            filaEditando.find(".botones-edicion").hide()
+            filaEditando.find(".editar").show()
+        });
+
+        // Funcionalidad para cancelar la edición
+        $(document).on("click", ".cancelar", function() {
+            filaEditando.find(".botones-edicion").hide()
+            filaEditando.find(".editar").show()
+            resetearValores()
+        });
+    </script>
+
+
+</body>
+</html>
+
+
+
+

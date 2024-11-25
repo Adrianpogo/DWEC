@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Juego de Memoria</title>
+    <!-- Importar jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
+        /* Estilo para el cuerpo del documento */
         body {
             font-family: Arial;
             text-align: center;
         }
+        /* Configuración del tablero */
         #tablero {
             margin: 20px auto;
             border-collapse: collapse;
         }
-        .ficha img{
+        /* Estilo de las fichas */
+        .ficha img {
             width: 100px;
             height: 100px;
             border: 1px solid #000;
@@ -23,21 +27,26 @@
             background-size: cover;
             background-position: center;
         }
+        /* Botones de acción */
         button {
             margin: 5px;
             padding: 10px 20px;
             font-size: 16px;
         }
-        .permanente{
-            filter: brightness(.5);
+        /* Estilo para las cartas permanentemente descubiertas */
+        .permanente {
+            filter: brightness(.5); /* Apagar brillo para diferenciar */
         }
     </style>
 </head>
 <body>
+    <!-- Botones para iniciar y reordenar cartas -->
     <button id="btn-iniciar">Iniciar</button>
     <button id="btn-reordenar">Reordenar cartas</button>
 
+    <!-- Tablero de juego con 4 filas y 5 columnas de fichas -->
     <table id="tablero">
+        <!-- Cada celda representará una carta -->
         <tr>
             <td class="ficha"></td>
             <td class="ficha"></td>
@@ -67,116 +76,118 @@
             <td class="ficha"></td>
         </tr>
     </table>
-    
+
     <script>
-
-
+        // Array que contiene las imágenes del juego (dos de cada tipo para las parejas)
         var imagenes = [
-                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg',
-                        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg'
-                    ]
+            '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', 
+            '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg',
+            '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', 
+            '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg'
+        ];
 
-        var cartas = []
-        var primeraCarta = null
-        var segundaCarta = null
-        var bloqueado = false
+        var cartas = []; // Array para guardar la mezcla de cartas
+        var primeraCarta = null; // Referencia a la primera carta seleccionada
+        var segundaCarta = null; // Referencia a la segunda carta seleccionada
+        var bloqueado = false; // Bloquear acciones mientras se comparan cartas
 
+        // Función para mezclar un array aleatoriamente
         function mezclarCartas(array) {
-            var copia = array.slice()
-            var mezcladas = []
+            var copia = array.slice(); // Copiar el array original
+            var mezcladas = [];
             while (copia.length) {
-                var indiceAleatorio = Math.floor(Math.random() * copia.length)
-                mezcladas.push(copia.splice(indiceAleatorio, 1)[0])
+                var indiceAleatorio = Math.floor(Math.random() * copia.length);
+                mezcladas.push(copia.splice(indiceAleatorio, 1)[0]); // Tomar un elemento aleatorio
             }
-            return mezcladas
+            return mezcladas;
         }
 
+        // Función para mostrar un tablero vacío al inicio
         function cargarCartasInicial() {
-            // Mostrar las cartas vacías al inicio
             $(".ficha").each(function() {
-                $(this).html("<img src=''>") // Imagen vacía
-                $(this).removeClass("revelada permanente")
+                $(this).html("<img src=''>"); // Mostrar imagen vacía
+                $(this).removeClass("revelada permanente"); // Quitar clases
             });
         }
 
+        // Función para cargar imágenes y asignarlas a las cartas
         function cargarCartas() {
-            cartas = mezclarCartas(imagenes);
-
-            // Asignar imágenes y mostrarlas
+            cartas = mezclarCartas(imagenes); // Mezclar las imágenes
             $(".ficha").each(function(index) {
-                $(this).attr("data-imagen", cartas[index]);// Usar un atributo personalizado
-                $(this).html("<img src='" + cartas[index] + "'>") // Mostrar las imágenes
-                $(this).removeClass("revelada permanente")
+                $(this).attr("data-imagen", cartas[index]); // Asignar una imagen como atributo personalizado
+                $(this).html("<img src='" + cartas[index] + "'>"); // Mostrar la imagen
+                $(this).removeClass("revelada permanente"); // Resetear clases
             });
         }
 
+        // Función para voltear una carta seleccionada
         function voltearCartas(carta) {
-            if (bloqueado || $(carta).hasClass("permanente") || $(carta).hasClass("revelada")) return
+            if (bloqueado || $(carta).hasClass("permanente") || $(carta).hasClass("revelada")) return;
 
-            // Mostrar la imagen de la carta
-            var imagen = $(carta).attr("data-imagen")
-            $(carta).html("<img src='" + imagen + "'>").addClass("revelada")
+            var imagen = $(carta).attr("data-imagen"); // Obtener la imagen de la carta
+            $(carta).html("<img src='" + imagen + "'>").addClass("revelada"); // Mostrarla
 
             if (!primeraCarta) {
-                primeraCarta = carta
+                primeraCarta = carta; // Guardar la primera carta
             } else if (!segundaCarta) {
-                segundaCarta = carta
-                verificarPareja()
+                segundaCarta = carta; // Guardar la segunda carta
+                verificarPareja(); // Verificar si son iguales
             }
         }
 
+        // Verificar si las dos cartas seleccionadas forman una pareja
         function verificarPareja() {
-            bloqueado = true
-            var imagen1 = $(primeraCarta).attr("data-imagen")
-            var imagen2 = $(segundaCarta).attr("data-imagen")
+            bloqueado = true; // Bloquear acciones mientras se verifica
+            var imagen1 = $(primeraCarta).attr("data-imagen");
+            var imagen2 = $(segundaCarta).attr("data-imagen");
 
             if (imagen1 === imagen2) {
-                // Las cartas coinciden: dejarlas reveladas permanentemente
-                $(primeraCarta).addClass("permanente")
-                $(segundaCarta).addClass("permanente")
-                resetSeleccion()
+                // Si coinciden, hacerlas permanentes
+                $(primeraCarta).addClass("permanente");
+                $(segundaCarta).addClass("permanente");
+                resetSeleccion();
             } else {
-                // Las cartas no coinciden: voltearlas después de 1.5 segundos
+                // Si no coinciden, voltearlas nuevamente después de un tiempo
                 setTimeout(function() {
-                    $(primeraCarta).html("<img src='atras.jpg'>").removeClass("revelada")
-                    $(segundaCarta).html("<img src='atras.jpg'>").removeClass("revelada")
-                    resetSeleccion()
-                }, 1500)
+                    $(primeraCarta).html("<img src='atras.jpg'>").removeClass("revelada");
+                    $(segundaCarta).html("<img src='atras.jpg'>").removeClass("revelada");
+                    resetSeleccion();
+                }, 1500);
             }
         }
 
+        // Resetear las referencias de cartas y comprobar si se ganó
         function resetSeleccion() {
-            primeraCarta = null
-            segundaCarta = null
-            bloqueado = false
+            primeraCarta = null;
+            segundaCarta = null;
+            bloqueado = false;
 
-            // Comprobar si todas las cartas están descubiertas
+            // Verificar si todas las cartas están descubiertas
             if ($(".ficha.permanente").length === $(".ficha").length) {
-                alert("¡Ganaste!")
+                alert("¡Ganaste!");
             }
         }
 
+        // Evento para iniciar el juego: voltear todas las cartas al reverso
         $("#btn-iniciar").on("click", function() {
-            // Voltear todas las cartas al reverso
             $(".ficha").each(function() {
-                $(this).html("<img src='atras.jpg'>")
-                $(this).removeClass("revelada")
+                $(this).html("<img src='atras.jpg'>"); // Mostrar la parte trasera
+                $(this).removeClass("revelada"); // Quitar la clase revelada
             });
         });
 
+        // Evento para reordenar y cargar nuevas cartas
         $("#btn-reordenar").on("click", function() {
-            cargarCartas()
+            cargarCartas();
         });
 
+        // Evento para manejar el clic en las fichas
         $("#tablero").on("click", ".ficha", function() {
-            voltearCartas(this)
+            voltearCartas(this);
         });
 
-        // Cargar el tablero vacío al inicio
-        cargarCartasInicial()
-        
-
+        // Inicializar el tablero vacío al cargar la página
+        cargarCartasInicial();
     </script>
-
 </body>
 </html>
