@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Correos Electrónicos</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/704f66461b.js" crossorigin="anonymous"></script>
+    <style>
+
+        body{
+            text-align: center;
+            background-color: whitesmoke;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+        }
+
+        button{
+            padding: 15px;
+            background-color: rgb(87, 104, 201);
+            border: none;
+            color: white;
+            margin: 20px;
+            font-size: 18px;
+        }
+
+        button:hover{
+            background-color: rgb(141, 143, 145);
+            cursor: pointer;
+        }
+
+        h2{
+            width: 100%;
+            background-color: rgb(87, 104, 201);
+            padding: 10px;
+            color: white;
+            text-align: left;
+            padding-left: 20px;
+            margin: 0;
+            font-size: 28px;
+            
+        }
+        .listaEmails{
+            width: 100%;
+        }
+
+        .email{
+            border-bottom: 2px solid lightgrey;
+            padding: 25px 0;
+        }
+
+        .emailSup{
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .emailSup i {
+            margin: 0 10px;
+        }
+
+        .iconos{
+            margin-left: 10px;
+        }
+
+        /*Estilos para la carga inicial de las propiedades del correo*/
+        .iconos,
+        .checkbox{
+            display: none;
+        }
+
+        .checkbox{
+            margin: 0 10px;
+        }
+
+        .marcado{
+            color: red;
+        }
+        
+    </style>
+
+</head>
+<body>
+    
+    <div class="botones">
+        <button id="btnAñadir">Añadir Email</button>
+        <button id="btnEliminar">Eliminar marcados</button>
+    </div>
+
+    <div class="contenedor">
+        <h2>Prioritarios</h2>
+        <div class="listaEmails">
+            <div class="email">
+                <div class="emailSup">
+                    <span class="indice">1</span>
+                    <input type="checkbox" class="checkbox">
+                    <i class="fa-solid fa-id-card-clip" id="iconoID"></i>
+                    <span>Nombre del correo</span>
+                    <div class="iconos">
+                        <i class="fa-regular fa-envelope"></i>
+                        <i class="fa-regular fa-flag"></i>
+                        <i class="fa-solid fa-thumbtack"></i>
+                        <i class="fa-solid fa-trash"></i>
+                    </div>
+                </div>
+                <span>Texto del correo</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var indice = 1
+
+        //Funcionalidad para añadir un nuevo correo a la lista 
+        $("#btnAñadir").on("click", function(){
+            indice++
+            $(".listaEmails").append(`
+                                        <div class="email">
+                                            <div class="emailSup">
+                                                <span class="indice">`+ indice +`</span>
+                                                <input type="checkbox" class="checkbox">
+                                                <i class="fa-solid fa-id-card-clip" id="iconoID"></i>
+                                                <span>Nombre del correo</span>
+                                                <div class="iconos">
+                                                    <i class="fa-regular fa-envelope"></i>
+                                                    <i class="fa-regular fa-flag"></i>
+                                                    <i class="fa-solid fa-thumbtack"></i>
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </div>
+                                            </div>
+                                            <span>Texto del correo</span>
+                                        </div>
+                                    `)
+        })
+
+        //Funcionalidad para mostrar los detalles del correo cuando el ratón este sobre este
+        $(".listaEmails").on("mouseenter", ".email", function(){
+            $(this).find(".iconos , .checkbox").show()
+            $(this).find("#iconoID").hide()
+        })
+
+        //Funcionalidad para ocultar los detalles del correo cuando el ratón este sobre este
+        $(".listaEmails").on("mouseleave", ".email", function(){
+            $(this).find(".iconos , .checkbox").hide()
+            $(this).find("#iconoID").show()
+        })
+
+        //Funcionalidad para marcar un correo como fijado
+        $(".listaEmails").on("click", ".fa-flag", function(){
+            $(this).toggleClass("marcado")
+        })
+
+        //Funcionalidad para eliminar un único correo (siempre que no esté fijado)
+        $(".listaEmails").on("click", ".fa-trash", function(){
+            var email = $(this).closest(".email")
+            if(!email.find(".fa-flag").hasClass("marcado")){
+                email.remove()
+            }else{
+                alert("No se puede borrar un email fijado")
+            }
+        })
+
+        //Funcionalidad para elimnar todos los correos que estén marcados pero no fijados
+        $("#btnEliminar").on("click", function(){
+            $(".email").each(function() {
+                var email = $(this)
+                var marcado = email.find(".checkbox").is(":checked")
+                var fijado = email.find(".fa-flag").hasClass("marcado")
+
+                if(marcado && !fijado){
+                    email.remove()
+                }
+            })
+
+        })
+
+    </script>
+    
+</body>
+</html>
