@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+
+    <script>
+
+        //Para pedir todos los personajes de Ricky y Morty
+        $.ajax({
+            url:"https://rickandmortyapi.com/api/character",
+            method:"GET", //Predeterminado
+            //Podemos pasar parametros a la url en lugar de añadirlos a la propia url 
+            /*
+            data:{
+                name:"Rick Sanchez"
+            },
+            */
+            dataType:"json", //El tipo de dato al que se convierte la respuesta
+            //Hay que pasar funciones de que pasa si hay error o exito (pueden pasarse funciones anonima, funciones normales, etc)
+            success: function(data){
+                console.log(data)
+            },
+            error: function(){} 
+        })
+
+    </script>
+    
+</body>
+</html>

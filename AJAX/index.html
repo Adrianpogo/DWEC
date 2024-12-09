@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricky y Morty</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #4d4d4d;
+            color: whitesmoke;
+            text-align: center;
+        }
+
+        .personajes,
+        .episodios{
+            text-align: center;   
+        }
+
+        h3{
+            font-size: 34px;
+            font-weight: bold;
+            width: 20%;
+            margin: 20px auto;
+            background-color: #333;
+            border-radius: 10px;
+            color: #f4f4f9;
+            padding: 20px;
+        }
+
+        input{
+            width: 200px;
+            height: 40px;
+            border: none;
+            border-bottom: 2px solid #333;
+            margin: 0 20px;
+            text-align: center;
+            
+        }
+
+        select{
+            width: 200px;
+            height: 40px;
+            margin: 0 20px;
+            
+        }
+
+        button{
+            width: 200px;
+            height: 40px;
+            background-color: #33333388;
+            color: #f4f4f9;
+            margin: 0 20px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        button:hover{
+            cursor: pointer;
+            background-color: #333333b6;
+            
+        }
+
+        .contenedorPersonajes{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            width: 70%;
+            margin: 20px auto;
+            margin-bottom: 50px;
+        }
+        
+        .card{
+            display: flex;
+            align-items: center;
+            background-color: #8982af;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3 ease;
+            flex:1 1 calc(25% - 20px);
+            max-width: calc(25% - 20px);
+            min-width: 250px;
+            box-sizing: border-box;
+        }
+
+        .card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img{
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-right: 2px solid #6054a1;
+        }
+
+        .card-content{
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .card-content p {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .episodios{
+            width: 70%;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap:50px;
+            
+        }
+
+        .episodio{
+            width: 270px;
+            border: 1px solid #8982af;
+            border-radius: 10px;  
+        }
+
+        .episodio h4{
+            background-color: #8982af;
+            color: white;
+            padding: 15px;
+            min-height: 30px;
+            max-height: 30px;
+            
+            margin: 0;
+            border-radius: 7px 7px 0 0; 
+        }
+
+        .episodio p {
+            margin: 30px;
+        }
+
+        .episodio button{
+            background-color: #6054a1;
+            margin-bottom: 20px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="personajes">
+        <h3>Personajes</h3>
+        <div class="buscador">
+            <input type="text" placeholder="Nombre del personaje" class="nombrePersonaje">
+            <select name="estado" class="selectEstado">
+                <option value="">Selecciona el estado</option>
+                <option value="Alive">Vivo</option>
+                <option value="Dead">Muerto</option>
+                <option value="Unknown">Desconocido</option>
+            </select>
+            <button class="btnBuscarPersonajes">Buscar</button>
+        </div>
+        <div class="contenedorPersonajes">
+
+        </div>
+    </div>
+    <h3>Episodios</h3>
+    <button class="btnMostrarEpisodios">Mostrar episodios</button>
+    <div class="episodios">
+        
+
+    </div>
+
+    <div class="personajesEpisodio">
+
+    </div>
+
+    <script>
+
+        //Funcionalidad para mostrar los personajes
+        $(".btnBuscarPersonajes").on("click",function(e){
+            e.preventDefault()
+            var nombre = $(".nombrePersonaje").val()
+            var estado = $(".selectEstado").val()
+
+
+            $.ajax({
+                url:"https://rickandmortyapi.com/api/character",
+                method:"GET",
+                dataType:"json",
+                data: {
+                    name: nombre || undefined ,
+                    status: estado || undefined
+                },
+                success: function(data){
+                    $(".contenedorPersonajes").empty() //Reseteamos el contenedor
+
+                    if(data.results && data.results.length > 0){
+                        data.results.forEach(personaje => {
+
+                            $(".contenedorPersonajes").append(`
+                                <div class="card">
+                                    <img src="`+ personaje.image+`">
+                                    <div class="card-content">
+                                        <p><strong>Nombre: </strong>`+ personaje.name +` </p>
+                                        <p><strong>Estado: </strong>`+ personaje.status +` </p>
+                                        <p><strong>Especie: </strong>`+ personaje.species +` </p>
+                                    </div>
+                                </div>
+                            `)
+                        });
+                        
+                    }else{
+                        $(".contenedorPersonajes").html("<p>No se encontraron resultados</p>")
+                    }
+                },
+                error: function(){
+                    $(".contenedorPersonajes").html("<p>Error en la la búsqueda</p>")
+                }
+            })
+        })
+
+
+        //Funcionalidad para mostrar los episodios
+        $(".btnMostrarEpisodios").on("click", function(e){
+            e.preventDefault
+
+            $.ajax({
+                url:"https://rickandmortyapi.com/api/episode",
+                method:"GET",
+                dataType:"json",
+                success: function(data){
+                    $(".episodios").empty() //Reseteamos el contenedor
+
+                    if(data.results && data.results.length > 0){
+                        data.results.forEach(episodio => {
+                            $(".episodios").append(`
+                                <div class="episodio">
+                                    <h4> (` + episodio.episode + `) `+ episodio.name+`</h4>
+                                    <p><strong>Fecha de lanzamiento: </strong>` + episodio.air_date+ `</p>
+                                    <button>Mostrar personajes</button>
+                                </div>
+                            `)
+                        })
+                    }
+                },
+                error:function(){
+                    $(".episodios").html("<p>Error en la la búsqueda</p>")
+                }
+            })
+        })
+
+        //Funcionalidad para mostrar los personajes de un episodio
+
+    </script>
+    
+</body>
+</html>
