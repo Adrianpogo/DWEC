@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima Profesional</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+    <header>
+        <h1>🌦️ Clima Profesional</h1>
+        <button id="theme-toggle">🌓 Cambiar Tema</button>
+    </header>
+    <main>
+        <form id="weather-form">
+            <input type="text" id="city" placeholder="Busca tu ciudad..." autocomplete="off">
+            <ul id="suggestions"></ul>
+            <button type="submit">Buscar</button>
+        </form>
+        <button id="current-location">📍 Mi Ubicación</button>
+        <label>
+            <input type="checkbox" id="unit-toggle"> Cambiar a °F
+        </label>
+        <section class="weather-info"></section>
+        <section class="advanced-info"></section>
+        <h2>📅 Pronóstico de 5 días</h2>
+        <section class="forecast-info"></section>
+        <h2>🕒 Historial de Búsquedas</h2>
+        <ul id="history"></ul>
+    </main>
+    <footer>
+        <p>Desarrollado por <strong>Tu Nombre</strong></p>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

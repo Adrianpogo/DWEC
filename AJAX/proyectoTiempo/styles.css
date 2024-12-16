@@ -1,0 +1,76 @@
+/* styles.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+.dark-theme {
+    background-color: #121212;
+    color: #ffffff;
+}
+.light-theme {
+    background-color: #f9f9f9;
+    color: #333333;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #444;
+    color: #fff;
+}
+main {
+    padding: 20px;
+}
+form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+#suggestions {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    display: none;
+    position: absolute;
+    width: 200px;
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 10;
+}
+#suggestions li {
+    padding: 5px;
+    cursor: pointer;
+}
+#suggestions li:hover {
+    background-color: #eee;
+}
+.weather-info, .advanced-info, .forecast-info {
+    margin-bottom: 20px;
+}
+.forecast-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.forecast-card {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    flex: 1 0 150px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #444;
+    color: #fff;
+    margin-top: 20px;
+}
+button {
+    cursor: pointer;
+}
