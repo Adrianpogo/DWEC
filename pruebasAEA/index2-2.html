@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de Rick y Morty - Personajes y Episodios</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #e74c3c;
+        }
+
+        .character-card {
+            display: inline-block;
+            width: 200px;
+            background-color: #34495e;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .character-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .character-card:hover {
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 10px;
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        .episodes, .location {
+            margin-top: 10px;
+            background-color: #34495e;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .location p {
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Explora los Personajes de Rick y Morty</h1>
+    <div id="charactersContainer"></div>
+
+    <script>
+        $(document).ready(function () {
+            // Función para obtener detalles de los personajes
+            function getCharacterDetails(characterId) {
+                $.ajax({
+                    url: `https://rickandmortyapi.com/api/character/${characterId}`,
+                    method: 'GET',
+                    success: function(data) {
+                        const characterCard = `
+                            <div class="character-card" data-id="${characterId}">
+                                <img src="${data.image}" alt="${data.name}">
+                                <h3>${data.name}</h3>
+                                <p>Especie: ${data.species}</p>
+                                <p>Estado: ${data.status}</p>
+                                <button class="viewEpisodesBtn">Ver Episodios</button>
+                                <button class="viewLocationBtn">Ver Ubicación</button>
+                            </div>
+                        `;
+                        $('#charactersContainer').append(characterCard);
+                    }
+                });
+            }
+
+            // Llamar a los primeros 5 personajes
+            for (let i = 1; i <= 5; i++) {
+                getCharacterDetails(i);
+            }
+
+            // Delegación de evento para ver episodios
+            $(document).on('click', '.viewEpisodesBtn', function() {
+                const characterId = $(this).parent().data('id');
+                const button = $(this);
+
+                $.ajax({
+                    url: `https://rickandmortyapi.com/api/character/${characterId}`,
+                    method: 'GET',
+                    success: function(data) {
+                        data.episode.forEach(function(episodeUrl) {
+                            $.ajax({
+                                url: episodeUrl,
+                                method: 'GET',
+                                success: function(episodeData) {
+                                    button.parent().append(`<div class="episodes"><p>${episodeData.name} (S${episodeData.episode.split("E")[1].split(" ")[0]})</p></div>`);
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+
+            // Delegación de evento para ver ubicación
+            $(document).on('click', '.viewLocationBtn', function() {
+                const characterId = $(this).parent().data('id');
+                const button = $(this);
+
+                $.ajax({
+                    url: `https://rickandmortyapi.com/api/character/${characterId}`,
+                    method: 'GET',
+                    success: function(data) {
+                        const locationUrl = data.location.url;
+                        $.ajax({
+                            url: locationUrl,
+                            method: 'GET',
+                            success: function(locationData) {
+                                button.parent().append(`<div class="location"><p>Ubicación: ${locationData.name}</p><p>Tipo: ${locationData.type}</p></div>`);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador de Personajes de Rick and Morty</title>
+    <style>
+        .character {
+            cursor: pointer;
+            margin: 10px;
+        }
+        #character-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explorador de Personajes de Rick and Morty</h1>
+    <input type="text" id="search-name" placeholder="Buscar personaje">
+    <button id="search-button">Buscar</button>
+    <div id="species-buttons"></div>
+    <div id="character-list"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let page = 1;
+        
+        // Función para cargar los primeros 20 personajes
+        function loadCharacters() {
+            $.ajax({
+                url: `https://rickandmortyapi.com/api/character/?page=${page}`,
+                method: "GET",
+                success: function(data) {
+                    data.results.forEach(character => {
+                        $("#character-list").append(`
+                            <div class="character" data-url="${character.url}">
+                                <h3>${character.name}</h3>
+                                <img src="${character.image}" alt="${character.name}">
+                            </div>
+                        `);
+                    });
+                }
+            });
+        }
+
+        // Función para buscar personajes por nombre
+        $(document).on("click", "#search-button", function() {
+            const name = $("#search-name").val();
+            if (name) {
+                $.ajax({
+                    url: `https://rickandmortyapi.com/api/character/?name=${name}`,
+                    method: "GET",
+                    success: function(data) {
+                        $("#character-list").html("");
+                        data.results.forEach(character => {
+                            $("#character-list").append(`
+                                <div class="character" data-url="${character.url}">
+                                    <h3>${character.name}</h3>
+                                    <img src="${character.image}" alt="${character.name}">
+                                </div>
+                            `);
+                        });
+                    }
+                });
+            }
+        });
+
+        // Mostrar detalles al hacer clic en un personaje
+        $(document).on("click", ".character", function() {
+            const url = $(this).data("url");
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function(data) {
+                    alert(`Nombre: ${data.name}\nEspecie: ${data.species}\nEstado: ${data.status}`);
+                }
+            });
+        });
+
+        // Scroll infinito para cargar más personajes
+        $(window).on("scroll", function() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
+                page++;
+                loadCharacters();
+            }
+        });
+
+        // Cargar los tipos de especies para crear filtros
+        $.ajax({
+            url: "https://rickandmortyapi.com/api/character/",
+            method: "GET",
+            success: function(data) {
+                let speciesSet = new Set();
+                data.results.forEach(character => {
+                    speciesSet.add(character.species);
+                });
+                speciesSet.forEach(species => {
+                    $("#species-buttons").append(`<button class="species-button">${species}</button>`);
+                });
+            }
+        });
+
+        // Filtrar personajes por especie
+        $(document).on("click", ".species-button", function() {
+            const species = $(this).text();
+            $.ajax({
+                url: `https://rickandmortyapi.com/api/character/?species=${species}`,
+                method: "GET",
+                success: function(data) {
+                    $("#character-list").html("");
+                    data.results.forEach(character => {
+                        $("#character-list").append(`
+                            <div class="character" data-url="${character.url}">
+                                <h3>${character.name}</h3>
+                                <img src="${character.image}" alt="${character.name}">
+                            </div>
+                        `);
+                    });
+                }
+            });
+        });
+
+        // Cargar personajes iniciales
+        loadCharacters();
+    </script>
+</body>
+</html>

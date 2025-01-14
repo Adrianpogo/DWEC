@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de Pokémon - Interacciones</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+
+        .pokemon-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .pokemon-card {
+            width: 200px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .pokemon-card img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .pokemon-card:hover {
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 10px;
+            background-color: #3498db;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .pokemon-stats {
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Conoce a los Pokémon</h1>
+    <button id="loadMoreBtn">Cargar más Pokémon</button>
+    <div class="pokemon-container" id="pokemonContainer"></div>
+
+    <script>
+        $(document).ready(function () {
+            let pokemonIds = [1, 2, 3, 4, 5]; // Pokémon iniciales para cargar
+
+            // Función para obtener los detalles de un Pokémon
+            function getPokemonDetails(pokemonId) {
+                $.ajax({
+                    url: `https://pokeapi.co/api/v2/pokemon/${pokemonId}`,
+                    method: 'GET',
+                    success: function(data) {
+                        const pokemonCard = `
+                            <div class="pokemon-card" data-id="${pokemonId}">
+                                <h3>${data.name.charAt(0).toUpperCase() + data.name.slice(1)}</h3>
+                                <img src="${data.sprites.front_default}" alt="${data.name}">
+                                <div class="pokemon-stats" id="stats-${pokemonId}">
+                                    <p>HP: ${data.stats[0].base_stat}</p>
+                                    <p>Attack: ${data.stats[1].base_stat}</p>
+                                    <p>Defense: ${data.stats[2].base_stat}</p>
+                                    <p>Speed: ${data.stats[5].base_stat}</p>
+                                </div>
+                                <button class="viewStatsBtn">Ver Estadísticas</button>
+                            </div>
+                        `;
+                        $('#pokemonContainer').append(pokemonCard);
+                    }
+                });
+            }
+
+            // Evento para cargar más Pokémon
+            $('#loadMoreBtn').on('click', function() {
+                pokemonIds.forEach(id => getPokemonDetails(id));
+                pokemonIds = pokemonIds.map(id => id + 5); // Cambiar para cargar otros Pokémon
+            });
+
+            // Evento para ver las estadísticas del Pokémon
+            $(document).on('click', '.viewStatsBtn', function() {
+                const pokemonId = $(this).parent().data('id');
+                $(`#stats-${pokemonId}`).toggle();
+            });
+
+            // Cargar los primeros Pokémon
+            pokemonIds.forEach(id => getPokemonDetails(id));
+        });
+    </script>
+</body>
+</html>

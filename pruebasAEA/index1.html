@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador Avanzado de Pokémon</title>
+    <style>
+        #results img {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explorador Avanzado de Pokémon</h1>
+    <input type="text" id="pokemon-name" placeholder="Nombre del Pokémon">
+    <button id="search-button">Buscar</button>
+    <div id="type-buttons"></div>
+    <div id="results"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let offset = 0;
+
+        // Función para listar Pokémon iniciales
+        function loadPokemon() {
+            $.ajax({
+                url: `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=50`,
+                method: "GET",
+                success: function(data) {
+                    data.results.forEach(pokemon => {
+                        $("#results").append(`<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${getIdFromUrl(pokemon.url)}.png" alt="${pokemon.name}" data-url="${pokemon.url}">`);
+                    });
+                }
+            });
+        }
+
+        // Cargar Pokémon iniciales
+        loadPokemon();
+
+        // Función para obtener el ID del Pokémon desde la URL
+        function getIdFromUrl(url) {
+            return url.split("/")[url.split("/").length - 2];
+        }
+
+        // Búsqueda de Pokémon por nombre
+        $(document).on("click", "#search-button", function() {
+            const name = $("#pokemon-name").val().toLowerCase();
+            if (name) {
+                $.ajax({
+                    url: `https://pokeapi.co/api/v2/pokemon/${name}`,
+                    method: "GET",
+                    success: function(data) {
+                        $("#results").html(`
+                            <div>
+                                <h2>${data.name}</h2>
+                                <img src="${data.sprites.front_default}" alt="${data.name}">
+                                <p>Altura: ${data.height}</p>
+                                <p>Peso: ${data.weight}</p>
+                                <p>Habilidades: ${data.abilities.map(ability => ability.ability.name).join(", ")}</p>
+                            </div>
+                        `);
+                    },
+                    error: function() {
+                        $("#results").html("<p>Pokémon no encontrado</p>");
+                    }
+                });
+            }
+        });
+
+        // Scroll infinito para cargar más Pokémon
+        $(window).on("scroll", function() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
+                offset += 20;
+                loadPokemon();
+            }
+        });
+
+        // Mostrar detalles al hacer clic en la imagen del Pokémon
+        $(document).on("click", "#results img", function() {
+            const url = $(this).data("url");
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function(data) {
+                    alert(`Nombre: ${data.name}\nAltura: ${data.height}\nPeso: ${data.weight}`);
+                }
+            });
+        });
+
+        // Cargar tipos de Pokémon y generar botones de filtro
+        $.ajax({
+            url: "https://pokeapi.co/api/v2/type",
+            method: "GET",
+            success: function(data) {
+                data.results.forEach(type => {
+                    $("#type-buttons").append(`<button class="type-button" data-url="${type.url}">${type.name}</button>`);
+                });
+            }
+        });
+
+        // Filtrar Pokémon por tipo
+        $(document).on("click", ".type-button", function() {
+            const url = $(this).data("url");
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function(data) {
+                    $("#results").html("");
+                    data.pokemon.forEach(pokemonEntry => {
+                        const pokemon = pokemonEntry.pokemon;
+                        $("#results").append(`<p>${pokemon.name}</p>`);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

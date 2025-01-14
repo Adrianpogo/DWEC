@@ -3,36 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clima Profesional</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="dark-theme">
-    <header>
-        <h1>🌦️ Clima Profesional</h1>
-        <button id="theme-toggle">🌓 Cambiar Tema</button>
-    </header>
-    <main>
-        <form id="weather-form">
-            <input type="text" id="city" placeholder="Busca tu ciudad..." autocomplete="off">
-            <ul id="suggestions"></ul>
-            <button type="submit">Buscar</button>
-        </form>
-        <button id="current-location">📍 Mi Ubicación</button>
-        <label>
-            <input type="checkbox" id="unit-toggle"> Cambiar a °F
-        </label>
-        <section class="weather-info"></section>
-        <section class="advanced-info"></section>
-        <h2>📅 Pronóstico de 5 días</h2>
-        <section class="forecast-info"></section>
-        <h2>🕒 Historial de Búsquedas</h2>
-        <ul id="history"></ul>
-    </main>
-    <footer>
-        <p>Desarrollado por <strong>Tu Nombre</strong></p>
-    </footer>
+    <title>Aplicación del Tiempo</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="app.js"></script>
+</head>
+<body>
+    <h1>Aplicación del Tiempo</h1>
+
+    <!-- Ciudad -->
+    <div>
+        <input type="text" id="city" placeholder="Introduce una ciudad">
+        <button id="getWeatherByCity">Obtener tiempo</button>
+    </div>
+
+    <!-- Ubicación actual -->
+    <div>
+        <button id="getCurrentWeather">Obtener tiempo actual</button>
+    </div>
+
+    <!-- Unidades -->
+    <div>
+        <button id="toggleUnits">Cambiar unidades (°C/°F)</button>
+    </div>
+
+    <h2 id="cityName"></h2>
+    <p id="temperature"></p>
+    <p id="description"></p>
+    <img id="weatherIcon" alt="Icono del tiempo">
+
+    <!-- Previsión de 5 días -->
+    <h3>Previsión 5 días</h3>
+    <div id="forecast"></div>
+
+    <script>
+        let units = 'metric'; // Unidades iniciales en Celsius
+
+        // Función para obtener el tiempo por ciudad
+        function getWeather(city) {
+            $.ajax({
+                url: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=a672d1f7cb24f66f19be868475341f1e&units=${units}`,
+                method: 'GET',
+                success: function (data) {
+                    $('#cityName').text(data.name);
+                    $('#temperature').text(`Temperatura: ${data.main.temp} ${units === 'metric' ? '°C' : '°F'}`);
+                    $('#description').text(`Descripción: ${data.weather[0].description}`);
+                    $('#weatherIcon').attr('src', `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`);
+                }
+            });
+        }
+
+        // Función para obtener el tiempo en la ubicación actual
+        function getCurrentWeather() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    $.ajax({
+                        url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=a672d1f7cb24f66f19be868475341f1e&units=${units}`,
+                        method: 'GET',
+                        success: function (data) {
+                            $('#cityName').text(data.name);
+                            $('#temperature').text(`Temperatura: ${data.main.temp} ${units === 'metric' ? '°C' : '°F'}`);
+                            $('#description').text(`Descripción: ${data.weather[0].description}`);
+                            $('#weatherIcon').attr('src', `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`);
+                        }
+                    });
+                });
+            } else {
+                alert("Geolocalización no soportada en este navegador.");
+            }
+        }
+
+        // Función para obtener la previsión de 5 días
+        function getForecast(city) {
+            $.ajax({
+                url: `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=a672d1f7cb24f66f19be868475341f1e&units=${units}`,
+                method: 'GET',
+                success: function (data) {
+                    $('#forecast').empty();
+                    data.list.slice(0, 5).forEach((forecast, index) => {
+                        const date = new Date(forecast.dt * 1000);
+                        $('#forecast').append(`
+                            <div>
+                                <h4>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</h4>
+                                <p>Temperatura: ${forecast.main.temp} ${units === 'metric' ? '°C' : '°F'}</p>
+                                <p>${forecast.weather[0].description}</p>
+                                <img src="https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png" alt="Icono del tiempo">
+                            </div>
+                        `);
+                    });
+                }
+            });
+        }
+
+        // Cambiar unidades
+        $('#toggleUnits').click(function() {
+            // Cambiar entre 'metric' (°C) y 'imperial' (°F)
+            units = (units === 'metric') ? 'imperial' : 'metric'; 
+            $('#temperature').text($('#temperature').text().replace(/°C|°F/, units === 'metric' ? '°C' : '°F'));
+            getWeather($('#city').val());  // Actualizar la ciudad con las nuevas unidades
+            getCurrentWeather();  // Actualizar la ubicación actual con las nuevas unidades
+        });
+
+        // Manejar la entrada de la ciudad
+        $('#getWeatherByCity').click(function () {
+            const city = $('#city').val();
+            getWeather(city);
+            getForecast(city);
+        });
+
+        // Obtener el tiempo de la ubicación actual
+        $('#getCurrentWeather').click(function () {
+            getCurrentWeather();
+        });
+    </script>
 </body>
 </html>

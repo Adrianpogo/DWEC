@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima Actual - OpenWeather</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ecf0f1;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2980b9;
+        }
+
+        .weather-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .weather-card {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px;
+            background-color: #2980b9;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta el Clima</h1>
+    <button id="loadWeatherBtn">Mostrar Clima</button>
+    <div class="weather-container" id="weatherContainer"></div>
+
+    <script>
+        $(document).ready(function () {
+            const cities = ['London', 'New York', 'Tokyo', 'Paris', 'Madrid'];
+
+            // Función para obtener el clima de una ciudad
+            function getWeather(city) {
+                $.ajax({
+                    url: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=a672d1f7cb24f66f19be868475341f1e`,
+                    method: 'GET',
+                    success: function(data) {
+                        const weatherCard = `
+                            <div class="weather-card">
+                                <h3>${data.name}</h3>
+                                <p>${data.weather[0].description}</p>
+                                <p>Temp: ${(data.main.temp - 273.15).toFixed(2)}°C</p>
+                            </div>
+                        `;
+                        $('#weatherContainer').append(weatherCard);
+                    }
+                });
+            }
+
+            // Evento para cargar clima de varias ciudades
+            $('#loadWeatherBtn').on('click', function() {
+                cities.forEach(city => getWeather(city));
+            });
+        });
+    </script>
+</body>
+</html>

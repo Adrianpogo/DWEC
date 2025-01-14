@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronóstico del Tiempo Avanzado</title>
+    <style>
+        .weather-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pronóstico del Tiempo Avanzado</h1>
+    <input type="text" id="city-name" placeholder="Nombre de la ciudad">
+    <button id="get-weather">Obtener pronóstico</button>
+    <div id="current-weather"></div>
+    <div id="forecast"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const API_KEY = "a672d1f7cb24f66f19be868475341f1e"; // Reemplaza con tu clave de API de OpenWeather
+
+        // Obtener el pronóstico actual para la ciudad
+        function getCurrentWeather(city) {
+            $.ajax({
+                url: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`,
+                method: "GET",
+                success: function(data) {
+                    $("#current-weather").html(`
+                        <h2>${data.name}</h2>
+                        <p>Temperatura: ${data.main.temp} °C (${(data.main.temp * 9/5 + 32).toFixed(2)} °F)</p>
+                        <p>Humedad: ${data.main.humidity}%</p>
+                        <p>Presión: ${data.main.pressure} hPa</p>
+                        <p>Descripción: ${data.weather[0].description}</p>
+                    `);
+                }
+            });
+        }
+
+        // Obtener la previsión del tiempo para los próximos 5 días
+        function getForecast(city) {
+            $.ajax({
+                url: `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`,
+                method: "GET",
+                success: function(data) {
+                    $("#forecast").html("");
+                    data.list.forEach((item, index) => {
+                        if (index % 8 === 0) { // Cada 8 elementos es un día
+                            $("#forecast").append(`
+                                <div class="weather-card">
+                                    <h3>${item.dt_txt}</h3>
+                                    <p>Temperatura: ${item.main.temp} °C (${(item.main.temp * 9/5 + 32).toFixed(2)} °F)</p>
+                                    <p>Humedad: ${item.main.humidity}%</p>
+                                    <p>Descripción: ${item.weather[0].description}</p>
+                                </div>
+                            `);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Delegación de eventos para buscar por ciudad
+        $(document).on("click", "#get-weather", function() {
+            const city = $("#city-name").val();
+            if (city) {
+                getCurrentWeather(city);
+                getForecast(city);
+            }
+        });
+    </script>
+</body>
+</html>
