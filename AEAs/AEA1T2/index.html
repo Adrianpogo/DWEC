@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEA 1 T2 - Adrián Pousa</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: whitesmoke;
+        }
+        table{
+            border-collapse: collapse;
+            border: 1px solid black;
+            text-align: center;
+            
+        }
+
+        thead td{
+            background-color: rgb(219, 219, 219);
+            font-weight: bold;
+        }
+        
+        td{
+            padding: 30px;
+            border-bottom: 1px solid rgb(165, 165, 165);
+            background-color: rgb(198, 214, 224);
+            
+        }
+
+        
+
+        button, input, select{
+            background-color: rgb(219, 219, 219);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            border: 1px solid rgb(165, 165, 165);
+        }
+
+        button:hover{
+            background-color: rgb(77, 77, 77);
+            color: whitesmoke;
+            cursor: pointer;
+        }
+
+        #descripcion{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #descripcion img{
+            width: 50px;
+            height: auto;
+            margin: 5px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Consulta del tiempo</h1>
+    <div id="contenedor">
+        <select id="lenguaje">
+            <option value="es">Español</option>
+            <option value="en">Inglés</option>
+            <option value="de">Alemán</option>
+            <option value="fr">Francés</option>
+        </select>
+        
+        <p>Introduce el nombre de una ciudad para obtener el clima actual:</p>
+        <input type="text"  id="ciudad">
+        <button id="btnConsultar">Consultar</button>            
+        <button id="btnPronostico">Ver Pronóstico</button>
+    </div>
+
+    <div id="contenedor-resultado">
+
+    </div>
+
+    <script>
+
+        //Funcionalidad para mostrar el contenido del LocalStorage al iniciar la página
+        $(document).ready(function(){
+            if(localStorage.getItem("clima")) {
+                $("#contenedor-resultado").html(localStorage.getItem("clima"))
+            }
+        })
+
+        var apiKey = "a672d1f7cb24f66f19be868475341f1e"
+        
+        //Funcionalidad para consultar el clima en una ciudad
+        $("#btnConsultar").on("click", function(){
+            var ciudad = $("#ciudad").val()
+            var lang = $("#lenguaje").val()
+
+            //Comprobamos si existe ciudad para hacer la llamada a la API
+            if(ciudad){
+                $.ajax({
+                url: "https://api.openweathermap.org/data/2.5/weather",
+                method: "GET",
+                data: {
+                    appid: apiKey,
+                    lang: lang,
+                    q: ciudad,
+                    units: "metric"
+                },
+                success: function(data){
+                    $("#contenedor-resultado").html(`
+                                                        <div>
+                                                            <h3>Clima en `+ ciudad+`</h3>
+                                                            <p>Temperatura: `+ data.main.temp +`ºC</p>
+                                                            <p>Humedad: `+ data.main.humidity +`%</p>
+                                                            <p>Descripcion: `+ data.weather[0].description +`</p>
+
+                                                        </div>
+                                                    `)
+                    //Funcionalidad para mantener la información en el localStorage
+                    localStorage.setItem("clima",$("#contenedor-resultado").html())
+                },
+                error: function(){
+                    $("#contenedor-resultado").html("<p>Error al obtener el clima</p>")
+                }              
+            })
+            }else{
+                alert("Debes introducir una ciudad")
+            }
+            
+        })
+
+        //Funcionalidad para mostrar el pronóstico
+        $("#btnPronostico").on("click", function(){
+            var ciudad = $("#ciudad").val()
+            var lang = $("#lenguaje").val()
+
+            //Comprobamos si existe ciudad para hacer la llamada a la API
+            if(ciudad){
+                $.ajax({
+                    url: "https://api.openweathermap.org/data/2.5/forecast",
+                    method: "GET",
+                    data: {
+                        appid: apiKey,
+                        lang: lang,
+                        q: ciudad,
+                        units: "metric"
+                    },
+                    success: function(data){
+                        var html = `
+                                        <h2>Pronostico del clima para `+ ciudad +`</h2>
+                                        <table>
+                                            <thead>
+                                                <td>Fecha y Hora</td>
+                                                <td>Temperatura (ºC)</td>
+                                                <td>Humedad (%)</td>
+                                                <td>Descripción</td>
+                                            </thead>
+                                            <tbody >   
+                                    `
+                        //Añadir la información de cada registro a la tabla  
+                        data.list.forEach(item => {
+                            html+= `
+                                        <tr>
+                                            <td>`+ item.dt_txt+`</td>
+                                            <td>`+ item.main.temp+`</td>
+                                            <td>`+ item.main.humidity+`</td>
+                                            <td id='descripcion'><img src='https://openweathermap.org/img/wn/`+ item.weather[0].icon +`.png'>`+ item.weather[0].description+`</td>
+                                        </tr>
+                                 `
+                        });
+
+                        html+= `</tbody></table>`
+
+                        //Añadir la tabla al html
+                        $("#contenedor-resultado").html(html) 
+
+                        //Funcionalidad para mantener la información en el localStorage
+                        localStorage.setItem("clima",html)
+                    },
+                    error: function(){
+                        $("#contenedor-resultado").html("<p>Error al obtener el clima</p>")
+                    }   
+                })
+            }else{
+                alert("Debes introducir una ciudad")
+            }   
+        })
+
+    </script>
+    
+</body>
+</html>

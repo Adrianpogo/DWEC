@@ -38,12 +38,14 @@
             border-bottom: 2px solid #333;
             margin: 0 20px;
             text-align: center;
+            
         }
 
         select{
             width: 200px;
             height: 40px;
             margin: 0 20px;
+            
         }
 
         button{
@@ -59,6 +61,7 @@
         button:hover{
             cursor: pointer;
             background-color: #333333b6;
+            
         }
 
         .contenedorPersonajes{
@@ -70,7 +73,7 @@
             margin: 20px auto;
             margin-bottom: 50px;
         }
-
+        
         .card{
             display: flex;
             align-items: center;
@@ -79,12 +82,11 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3 ease;
             flex:1 1 calc(25% - 20px);
             max-width: calc(25% - 20px);
             min-width: 250px;
             box-sizing: border-box;
-            position: relative; /* Necesario para posicionar las miniaturas */
         }
 
         .card:hover{
@@ -117,22 +119,22 @@
             flex-wrap: wrap;
             justify-content: space-between;
             gap:50px;
+            
         }
 
         .episodio{
             width: 270px;
             border: 1px solid #8982af;
             border-radius: 10px;  
-            background-color: #6054a1;
-            color: white;
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .episodio h4{
             background-color: #8982af;
             color: white;
             padding: 15px;
+            min-height: 30px;
+            max-height: 30px;
+            
             margin: 0;
             border-radius: 7px 7px 0 0; 
         }
@@ -142,59 +144,10 @@
         }
 
         .episodio button{
-            background-color: #3b3a73;
+            background-color: #6054a1;
             margin-bottom: 20px;
-            border-radius: 8px;
         }
 
-        /* Estilos para las miniaturas de los personajes */
-        .miniPersonajes{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px 20px;
-            border-top: 1px solid #8982af;
-        }
-
-        .miniPersonaje{
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #8982af;
-        }
-
-        .miniPersonaje img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Estilo para el loader de scroll infinito */
-        .loader {
-            margin: 20px;
-            display: none;
-        }
-
-        .paginacion {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .paginacion button {
-            background-color: #8982af;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            padding: 10px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-
-        .paginacion button.active {
-            background-color: #3b3a73;
-        }
 
     </style>
 </head>
@@ -212,179 +165,99 @@
             </select>
             <button class="btnBuscarPersonajes">Buscar</button>
         </div>
-        <div class="contenedorPersonajes"></div>
+        <div class="contenedorPersonajes">
 
-        <!-- Paginación -->
-        <div class="paginacion"></div>
+        </div>
     </div>
-
     <h3>Episodios</h3>
     <button class="btnMostrarEpisodios">Mostrar episodios</button>
-    <div class="episodios"></div>
+    <div class="episodios">
+        
+
+    </div>
+
+    <div class="personajesEpisodio">
+
+    </div>
 
     <script>
-        var currentPage = 1;
-        var totalPages = 5;  // Aquí puedes ajustar el total de páginas según la API
 
-        $(".btnBuscarPersonajes").on("click", function(e){
-            e.preventDefault();
-            var nombre = $(".nombrePersonaje").val();
-            var estado = $(".selectEstado").val();
-            currentPage = 1;
-            cargarPersonajes(nombre, estado, currentPage);
-        });
+        //Funcionalidad para mostrar los personajes
+        $(".btnBuscarPersonajes").on("click",function(e){
+            e.preventDefault()
+            var nombre = $(".nombrePersonaje").val()
+            var estado = $(".selectEstado").val()
 
-        function cargarPersonajes(nombre, estado, pagina) {
+
             $.ajax({
-                url: "https://rickandmortyapi.com/api/character",
-                method: "GET",
-                dataType: "json",
+                url:"https://rickandmortyapi.com/api/character",
+                method:"GET",
+                dataType:"json",
                 data: {
-                    name: nombre || undefined,
-                    status: estado || undefined,
-                    page: pagina
+                    name: nombre || undefined ,
+                    status: estado || undefined
                 },
-                success: function(data) {
-                    $(".contenedorPersonajes").empty();
-                    if (data.results && data.results.length > 0) {
+                success: function(data){
+                    $(".contenedorPersonajes").empty() //Reseteamos el contenedor
+
+                    if(data.results && data.results.length > 0){
                         data.results.forEach(personaje => {
+
                             $(".contenedorPersonajes").append(`
                                 <div class="card">
-                                    <img src="${personaje.image}" alt="${personaje.name}">
+                                    <img src="`+ personaje.image+`">
                                     <div class="card-content">
-                                        <h5 class="card-title">${personaje.name}</h5>
-                                        <p><strong>Estado:</strong> ${personaje.status}</p>
-                                        <p><strong>Especie:</strong> ${personaje.species}</p>
+                                        <p><strong>Nombre: </strong>`+ personaje.name +` </p>
+                                        <p><strong>Estado: </strong>`+ personaje.status +` </p>
+                                        <p><strong>Especie: </strong>`+ personaje.species +` </p>
                                     </div>
                                 </div>
-                            `);
+                            `)
                         });
-
-                        // Crear los botones de paginación
-                        crearPaginacion(5);
-                    } else {
-                        $(".contenedorPersonajes").html("<p>No se encontraron resultados</p>");
+                        
+                    }else{
+                        $(".contenedorPersonajes").html("<p>No se encontraron resultados</p>")
                     }
                 },
-                error: function() {
-                    $(".contenedorPersonajes").html("<p>Error en la búsqueda</p>");
+                error: function(){
+                    $(".contenedorPersonajes").html("<p>Error en la la búsqueda</p>")
                 }
-            });
-        }
+            })
+        })
 
-        function crearPaginacion(paginas) {
-            $(".paginacion").empty();
-            for (var i = 1; i <= paginas; i++) {
-                $(".paginacion").append(`
-                    <button class="pagina" data-page="${i}">${i}</button>
-                `);
-            }
 
-            // Marcar la página actual
-            $(".pagina").removeClass("active");
-            $(".pagina[data-page='" + currentPage + "']").addClass("active");
+        //Funcionalidad para mostrar los episodios
+        $(".btnMostrarEpisodios").on("click", function(e){
+            e.preventDefault
 
-            // Añadir el evento para cambiar de página
-            $(".pagina").on("click", function() {
-                currentPage = $(this).data("page");
-                cargarPersonajes($(".nombrePersonaje").val(), $(".selectEstado").val(), currentPage);
-            });
-        }
-
-        var currentPage = 1;
-        var totalPages = 5;  // Aquí puedes ajustar el total de páginas según la API
-        var loading = false; // Flag para controlar si estamos cargando datos
-        
-        // Detectamos el evento de scroll para el scroll infinito
-        $(window).on('scroll', function() {
-            if (loading) return; // Si ya estamos cargando no hacemos nada
-        
-            // Comprobamos si hemos llegado al final de la página
-            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
-                // Si estamos al final de la página, cargamos más episodios
-                if (currentPage <= totalPages) {
-                    loading = true; // Indicamos que estamos cargando
-                    cargarEpisodios(); // Cargamos los episodios
-                }
-            }
-        });
-        
-        function cargarEpisodios() {
             $.ajax({
-                url: "https://rickandmortyapi.com/api/episode",
-                method: "GET",
-                dataType: "json",
-                data: {
-                    page: currentPage
-                },
-                success: function(data) {
-                    if (data.results && data.results.length > 0) {
+                url:"https://rickandmortyapi.com/api/episode",
+                method:"GET",
+                dataType:"json",
+                success: function(data){
+                    $(".episodios").empty() //Reseteamos el contenedor
+
+                    if(data.results && data.results.length > 0){
                         data.results.forEach(episodio => {
                             $(".episodios").append(`
                                 <div class="episodio">
-                                    <h4 class="episodio-titulo">(${episodio.episode}) ${episodio.name}</h4>
-                                    <p><strong>Fecha de lanzamiento:</strong> ${episodio.air_date}</p>
-                                    <button class="btnMostrarPersonajesEpisodio" data-episodio="${episodio.id}">Mostrar personajes</button>
-                                    <div class="miniPersonajes" id="personajes-${episodio.id}" style="display:none;"></div>
+                                    <h4> (` + episodio.episode + `) `+ episodio.name+`</h4>
+                                    <p><strong>Fecha de lanzamiento: </strong>` + episodio.air_date+ `</p>
+                                    <button>Mostrar personajes</button>
                                 </div>
-                            `);
-                        });
-        
-                        // Aumentamos el número de página
-                        currentPage++;
-                        loading = false; // Indicamos que ya hemos terminado de cargar
-                    } else {
-                        // Si no hay más episodios
-                        loading = true; // Ya no cargamos más
-                        $(".episodios").append("<p>No hay más episodios para cargar.</p>");
+                            `)
+                        })
                     }
                 },
-                error: function() {
-                    loading = false;
-                    
+                error:function(){
+                    $(".episodios").html("<p>Error en la la búsqueda</p>")
                 }
-            });
-        }
+            })
+        })
 
-        $(".btnMostrarEpisodios").on("click", cargarEpisodios)
+        //Funcionalidad para mostrar los personajes de un episodio
 
-        // Función para cargar los personajes de un episodio
-    $(document).on("click", ".btnMostrarPersonajesEpisodio", function() {
-        var episodioId = $(this).data('episodio');
-        var contenedorPersonajes = $("#personajes-" + episodioId);
-
-        if (contenedorPersonajes.is(":visible")) {
-            contenedorPersonajes.hide();
-        } else {
-            $.ajax({
-                url: "https://rickandmortyapi.com/api/episode/" + episodioId,
-                method: "GET",
-                dataType: "json",
-                success: function(data) {
-                    var personajes = data.characters;
-                    contenedorPersonajes.empty();
-
-                    personajes.forEach(function(personajeUrl) {
-                        $.ajax({
-                            url: personajeUrl,
-                            method: "GET",
-                            dataType: "json",
-                            success: function(personaje) {
-                                contenedorPersonajes.append(`
-                                    <div class="miniPersonaje">
-                                        <img src="${personaje.image}" alt="${personaje.name}">
-                                    </div>
-                                `);
-                            }
-                        });
-                    });
-
-                    contenedorPersonajes.show();
-                }
-            });
-        }
-    });
-        
     </script>
+    
 </body>
 </html>
