@@ -15,14 +15,14 @@
             const xs = tf.tensor2d([1, 2, 3, 4, 5], [5, 1]);
             const ys = tf.tensor2d([2, 4, 6, 8, 10], [5, 1]);
         
-            // Definir el modelo de regresión lineal
+            // Definir el modelo de regresión lineal (Y=W⋅X+b)
             const model = tf.sequential(); //Modelo secuencial -->  las capas se añaden una después de otra en orden lineal
             model.add(tf.layers.dense({ units: 1, inputShape: [1] })); // Una sola capa densa(tipo más común de capa en redes neuronales)
             //La capa tiene una unidad de salida y una entrada de un solo valor
         
             // Compilar el modelo: optimizador y función de pérdida
             // Optimizador: algoritmo que ajusta los pesos (W) y el sesgo (b) de la red neuronal para que aprenda correctamente
-            //Función de perdida: mide cuánto de mal está prediciendo el modelo
+            // Función de perdida: mide cuánto de mal está prediciendo el modelo
             model.compile({ optimizer: 'sgd', loss: 'meanSquaredError' });
         
             // Entrenar el modelo con 500 iteraciones
